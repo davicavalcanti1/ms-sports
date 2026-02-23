@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Command Center - MS Sports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af35",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#0a0a0a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .gold-glow {
+            box-shadow: 0 0 15px -3px rgba(212, 175, 53, 0.3);
+        }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(212, 175, 53, 0.15) 0%, rgba(212, 175, 53, 0) 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d4af35;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header / Top Bar -->
+<header class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md border-b border-primary/20 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full border border-primary/50 overflow-hidden bg-background-dark flex items-center justify-center">
+<img alt="Admin profile avatar" class="w-full h-full object-cover" data-alt="Admin user profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGvCRnPeKiNCxuPJXWMA3B2mDQFTvVfiZ6NYirO7motBTHYzCCTNeO9z31NetG5BdrPTqV3fRJnYlPyIVAv5DZBG_JTyIDyj3IOUM8eBaaQhroqVOvixRAPTq4dxyzklG1RORnIKcCIWwicbtCjvNOYl6-5s5WR8v5WX6NMGKwXJJC6hcLuo8Gs74bA3WlTlHYiiFxUFRTP0oP9gAN30DnP1tuUh-8Dndkx5m85gkhjcMO5L8fzJBTs-kMMLSW4c8OttWb7OPGtPcY"/>
+</div>
+<div>
+<h1 class="text-sm font-bold tracking-tight text-white uppercase">MS Sports Admin</h1>
+<div class="flex items-center gap-1.5">
+<span class="size-2 rounded-full bg-primary animate-pulse"></span>
+<p class="text-[10px] text-primary font-medium tracking-widest uppercase">Secure Session Active</p>
+</div>
+</div>
+</div>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">shield_lock</span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Title Section -->
+<div class="px-4 py-6">
+<h2 class="text-2xl font-bold text-white tracking-tight">Command Center</h2>
+<p class="text-slate-400 text-xs">Real-time performance analytics</p>
+</div>
+<!-- KPI Cards Grid -->
+<div class="grid grid-cols-2 gap-4 px-4 mb-8">
+<div class="bg-[#1a1a1a] border border-primary/20 rounded-xl p-4 gold-glow">
+<div class="flex justify-between items-start mb-2">
+<span class="material-symbols-outlined text-primary text-xl">payments</span>
+<span class="text-[#0bda1d] text-[10px] font-bold">+12.4%</span>
+</div>
+<p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Total Revenue</p>
+<p class="text-2xl font-bold text-white tracking-tighter">$1.24M</p>
+<div class="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%]"></div>
+</div>
+</div>
+<div class="bg-[#1a1a1a] border border-primary/20 rounded-xl p-4 gold-glow">
+<div class="flex justify-between items-start mb-2">
+<span class="material-symbols-outlined text-primary text-xl">shopping_cart</span>
+<span class="text-[#0bda1d] text-[10px] font-bold">+5.2%</span>
+</div>
+<p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Total Orders</p>
+<p class="text-2xl font-bold text-white tracking-tighter">4,520</p>
+<div class="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%]"></div>
+</div>
+</div>
+</div>
+<!-- Sales Trend Line Chart Section -->
+<section class="px-4 mb-8">
+<div class="bg-[#1a1a1a] border border-primary/10 rounded-xl p-5">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-white font-bold text-sm">Sales Velocity</h3>
+<p class="text-slate-500 text-xs">Past 7 days volume</p>
+</div>
+<select class="bg-background-dark text-primary border-primary/30 text-[10px] rounded p-1 font-bold">
+<option>7 DAYS</option>
+<option>30 DAYS</option>
+</select>
+</div>
+<div class="relative h-40 w-full mb-4">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="glow" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#d4af35" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#d4af35" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,120 Q50,110 80,70 T160,80 T240,40 T320,60 T400,20 L400,150 L0,150 Z" fill="url(#glow)"></path>
+<path d="M0,120 Q50,110 80,70 T160,80 T240,40 T320,60 T400,20" fill="none" stroke="#d4af35" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="240" cy="40" fill="#d4af35" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between text-[10px] text-slate-500 font-bold px-1">
+<span>MON</span>
+<span>TUE</span>
+<span>WED</span>
+<span>THU</span>
+<span>FRI</span>
+<span>SAT</span>
+<span>SUN</span>
+</div>
+</div>
+</section>
+<!-- Category Distribution Section -->
+<section class="px-4 mb-8">
+<div class="bg-[#1a1a1a] border border-primary/10 rounded-xl p-5 flex items-center">
+<div class="w-1/2 relative flex items-center justify-center">
+<!-- Simple CSS/SVG Doughnut -->
+<svg class="size-32 transform -rotate-90">
+<circle cx="64" cy="64" fill="transparent" r="50" stroke="#262626" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="transparent" r="50" stroke="#d4af35" stroke-dasharray="314" stroke-dashoffset="100" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="transparent" r="50" stroke="#8c701d" stroke-dasharray="314" stroke-dashoffset="240" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-white font-bold text-xl tracking-tighter">842</span>
+<span class="text-slate-500 text-[8px] font-bold uppercase">Skus</span>
+</div>
+</div>
+<div class="w-1/2 pl-6 space-y-3">
+<h3 class="text-white font-bold text-sm mb-2">Inventory Mix</h3>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary"></span>
+<p class="text-xs text-slate-300">Footwear <span class="text-slate-500 ml-1">45%</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-[#8c701d]"></span>
+<p class="text-xs text-slate-300">Apparel <span class="text-slate-500 ml-1">35%</span></p>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-slate-700"></span>
+<p class="text-xs text-slate-300">Accessories <span class="text-slate-500 ml-1">20%</span></p>
+</div>
+</div>
+</div>
+</section>
+<!-- Inventory Management Table -->
+<section class="px-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-white font-bold text-sm uppercase tracking-widest">Inventory Management</h3>
+<button class="bg-primary/20 text-primary px-3 py-1 rounded-lg text-[10px] font-bold border border-primary/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">filter_list</span>
+                    FILTER
+                </button>
+</div>
+<div class="space-y-3">
+<!-- Row 1 -->
+<div class="bg-[#1a1a1a] border-l-2 border-primary rounded-r-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-background-dark rounded border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="Red Sneaker" class="w-full h-full object-cover" data-alt="Red athletic luxury performance sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3af9s1j2W0RvfDS5i5DJiIQuD-ZKX5esmvzxLZ0w07I6x4aWxLQipqxBrX4BBSwrIlfqoqdWwZbEK2O_ZsaxBS0Kl3cWXXC_L9aiWusVqPtR6ExmciQPdpoHjkc9PIrwAgMfc7NlDyngQgAgppKfyGC8YGzILKtoWCX1j6t6sm5BJVyuL-9oHiYe1qzLuxbt1Ptch0FPtbctDy72KIRvarEO70oUUYlpgZ2dVZ00Rb4Q3BF9-tA2xcd-AoKXL0kgb7XmY0y7_vWx-"/>
+</div>
+<div>
+<p class="text-white text-xs font-bold truncate w-32">Elite Runner X-1</p>
+<p class="text-slate-500 text-[10px]">Footwear • Size 10</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary text-xs font-bold">$245.00</p>
+<p class="text-slate-400 text-[10px]">Stock: <span class="text-primary">12</span></p>
+</div>
+<div class="flex gap-2 ml-4 border-l border-slate-800 pl-4">
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="bg-[#1a1a1a] border-l-2 border-slate-800 rounded-r-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-background-dark rounded border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="White Jersey" class="w-full h-full object-cover" data-alt="Minimalist white performance athletic jersey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdVEKGN8wKGKWhmFsMiIXbfQhHEFHsqeQoAlCZWX7ICvlhBUZfqnx-kMyR8CFhpmzhSALNo2h2CG6Io-QwLikGqjtK2Ehoysko-GwngOtd7xZJ6GjJaZHbxtuFU3kMIPULu271bNq8hUtsg2IRnRxSduKEofIXindU7uKRAm2jOGHwyjqqGjqq8G0i-lzr-29bx2sofOAgiV4Kg5pb8haZA0d-cCoitNqKrCbyI_tJCiRedaTvU_9vHs-nk8kh8Dxzf5M5-rK3cChH"/>
+</div>
+<div>
+<p class="text-white text-xs font-bold truncate w-32">Pro Compression Tee</p>
+<p class="text-slate-500 text-[10px]">Apparel • Medium</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary text-xs font-bold">$85.00</p>
+<p class="text-slate-400 text-[10px]">Stock: <span class="text-white">48</span></p>
+</div>
+<div class="flex gap-2 ml-4 border-l border-slate-800 pl-4">
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="bg-[#1a1a1a] border-l-2 border-primary rounded-r-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-background-dark rounded border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="Black Headphones" class="w-full h-full object-cover" data-alt="High-end noise cancelling gym headphones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaqwPcyDD1AQ1qPIYmKGBAky6d6S-R5tkHjH-0PM2O1CkLepTB3sni5EPNG9mtj9A67tDf5lkE5dvzSFV3ERAyFzI4z5VTdNoJCFJAO8ml9zuXILZV3wKAvsyWbwto_mUkXBoki-XVAhi7mhNROUhTmLmu0Wo6CV_ijvSLMNA3ZMAi-VWrIS3mXroX-31bbj4K5q8pc0cShlttvjjsty1U2zNxV-2kFV5wLkxQTocsXAQ_1cyyT1nBcVrdeWzlq3bqf_hlrAVsfDMU"/>
+</div>
+<div>
+<p class="text-white text-xs font-bold truncate w-32">Aura Gym Pods</p>
+<p class="text-slate-500 text-[10px]">Accessories • Black</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary text-xs font-bold">$299.00</p>
+<p class="text-slate-400 text-[10px]">Stock: <span class="text-primary">5</span></p>
+</div>
+<div class="flex gap-2 ml-4 border-l border-slate-800 pl-4">
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 size-14 bg-primary text-background-dark rounded-full shadow-lg flex items-center justify-center z-50 gold-glow">
+<span class="material-symbols-outlined font-bold text-3xl">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-primary/20 pb-6 pt-2 px-6 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-variation-fill">dashboard</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">Dash</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">Stock</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">Orders</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[9px] font-bold uppercase tracking-widest">Setup</span>
+</a>
+</nav>
+</body></html>
