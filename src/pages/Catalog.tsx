@@ -214,17 +214,18 @@ export default function Catalog() {
                                 </div>
                             )}
 
-                            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
+                            {/* Mobile: sempre visível. Desktop: aparece no hover */}
+                            <div className="absolute bottom-2 left-2 right-2 flex flex-col gap-1 sm:opacity-0 sm:group-hover:opacity-100 sm:bottom-4 sm:left-4 sm:right-4 sm:gap-2 transition-opacity">
                                 <button
                                     onClick={(e) => handleBuyNow(e, product)}
-                                    className="w-full py-2.5 bg-[#25D366] text-white font-bold rounded-lg shadow-lg hover:bg-green-500 transition-colors flex items-center justify-center gap-2 text-sm"
+                                    className="w-full py-1.5 sm:py-2.5 bg-[#25D366] text-white font-bold rounded-md sm:rounded-lg shadow-lg hover:bg-green-500 transition-colors flex items-center justify-center gap-1 sm:gap-2 text-[11px] sm:text-sm"
                                 >
-                                    <MessageCircle className="w-4 h-4" />
-                                    Comprar Agora
+                                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    Comprar
                                 </button>
                                 <button
                                     onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }}
-                                    className="w-full py-2.5 bg-white text-secondary font-bold rounded-lg shadow-lg hover:bg-primary transition-colors text-sm"
+                                    className="w-full py-1.5 sm:py-2.5 bg-white/90 text-secondary font-bold rounded-md sm:rounded-lg shadow-lg hover:bg-primary transition-colors text-[11px] sm:text-sm"
                                 >
                                     Ver Detalhes
                                 </button>
