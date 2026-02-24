@@ -4,16 +4,18 @@ import { getProducts } from '../data/products';
 import type { Product } from '../data/products';
 import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight } from 'lucide-react';
 
-type FilterGroup = "Todos" | "Times Brasileiros" | "Europeus" | "Asiáticos" | "Africanos" | "Feminino" | "Kid" | "Basquete";
+type FilterGroup = "Todos" | "Camisas" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
 
 const filterGroups: Record<Exclude<FilterGroup, "Todos">, string[]> = {
-    "Times Brasileiros": ["Flamengo", "Palmeiras", "São Paulo", "Corinthians", "Fluminense", "Vasco", "Botafogo", "Cruzeiro", "Atlético Mineiro", "Grêmio", "Internacional", "Santos", "Paysandu", "Bahia", "Sport", "Fortaleza"],
-    "Europeus": ["Real Madrid", "Barcelona", "Manchester City", "Manchester United", "Arsenal", "Chelsea", "Liverpool", "Tottenham", "Bayern", "Borussia Dortmund", "Juventus", "PSG", "Milan", "Inter", "Napoli", "Roma", "Aston Villa", "Newcastle", "Sporting", "Benfica", "Porto"],
-    "Asiáticos": ["Al Nassr", "Al Hilal", "Al Ittihad", "Al Ahli", "Japão", "Coreia do Sul", "Arábia Saudita"],
-    "Africanos": ["Marrocos", "Nigéria", "Senegal", "Egito", "Camarões", "Costa do Marfim", "Gana"],
-    "Feminino": [], // Auto-filter by generic keyword/category
-    "Kid": [], // Auto-filter by generic keyword/category
-    "Basquete": ["Lakers", "Bulls", "Warriors", "Celtics", "Heat", "Nets", "Mavericks", "Suns", "Bucks", "76ers"]
+    "Camisas": ["Versão Jogador", "Versão Torcedor", "Retrô"],
+    "Basquete": ["Camisa Basquete", "Short NBA"],
+    "F1": ["Camisa de Formula 1"],
+    "Kits": ["Kit Calça e Regata", "Kit Short e Regata", "Kit Calça e Camisa"],
+    "Shorts": ["Short de Futebol", "Short NBA"],
+    "Feminino": [],
+    "Infantil": ["Conjunto Kids"],
+    "Acessórios": ["Meia"],
+    "Polo": []
 };
 
 export default function Catalog() {
@@ -81,30 +83,32 @@ export default function Catalog() {
         // 2. Group/Team filtering
         if (selectedGroup !== 'Todos') {
             if (selectedTeam) {
-                // If a specific team is chosen inside a group
+                // If a specific sub-category is chosen
                 if (!titleLower.includes(selectedTeam.toLowerCase())) {
                     return false;
                 }
             } else {
-                // If a group is chosen but no specific team, filter loosely by group logic
+                // Group level filtering
                 if (selectedGroup === 'Feminino') {
                     if (!titleLower.includes('feminino') && !titleLower.includes('woman') && !titleLower.includes('women')) return false;
-                } else if (selectedGroup === 'Kid') {
+                } else if (selectedGroup === 'Infantil') {
                     if (!titleLower.includes('kid') && !titleLower.includes('infantil') && catLower !== 'infantil') return false;
                 } else if (selectedGroup === 'Basquete') {
-                    if (!titleLower.includes('basquete') && !titleLower.includes('basketball') && catLower !== 'nba') {
-                        // Check if it matches any known basketball team
-                        const matchesAnyNbaTeam = filterGroups["Basquete"].some(t => titleLower.includes(t.toLowerCase()));
-                        if (!matchesAnyNbaTeam) return false;
-                    }
-                } else {
-                    // Times Brasileiros, Europeus, Asiáticos, Africanos
-                    const teamsInGroup = filterGroups[selectedGroup];
-                    const matchesAnyTeam = teamsInGroup.some(t => titleLower.includes(t.toLowerCase()));
-
-                    if (!matchesAnyTeam) {
-                        return false;
-                    }
+                    if (!titleLower.includes('basquete') && !titleLower.includes('basketball') && catLower !== 'nba') return false;
+                } else if (selectedGroup === 'F1') {
+                    if (!titleLower.includes('f1') && !titleLower.includes('formula 1') && !titleLower.includes('fórmula 1')) return false;
+                } else if (selectedGroup === 'Kits') {
+                    if (!titleLower.includes('kit')) return false;
+                } else if (selectedGroup === 'Shorts') {
+                    if (!titleLower.includes('short')) return false;
+                } else if (selectedGroup === 'Acessórios') {
+                    if (!titleLower.includes('meia')) return false;
+                } else if (selectedGroup === 'Polo') {
+                    if (!titleLower.includes('polo')) return false;
+                } else if (selectedGroup === 'Camisas') {
+                    if (!titleLower.includes('jogador') && !titleLower.includes('player') &&
+                        !titleLower.includes('torcedor') && !titleLower.includes('fan') &&
+                        !titleLower.includes('retrô') && !titleLower.includes('retro')) return false;
                 }
             }
         }
@@ -153,7 +157,7 @@ export default function Catalog() {
                                 }`}
                         >
                             {group}
-                            {group !== 'Todos' && group !== 'Feminino' && group !== 'Kid' && (
+                            {group !== 'Todos' && group !== 'Feminino' && group !== 'Infantil' && group !== 'Polo' && (
                                 selectedGroup === group ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4 opacity-50" />
                             )}
                         </button>
@@ -161,7 +165,7 @@ export default function Catalog() {
                 </div>
 
                 {/* Sub-teams for selected group */}
-                {selectedGroup !== 'Todos' && selectedGroup !== 'Feminino' && selectedGroup !== 'Kid' && filterGroups[selectedGroup]?.length > 0 && (
+                {selectedGroup !== 'Todos' && selectedGroup !== 'Feminino' && selectedGroup !== 'Infantil' && selectedGroup !== 'Polo' && filterGroups[selectedGroup]?.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-white/5 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
                         {filterGroups[selectedGroup].map(team => (
                             <button

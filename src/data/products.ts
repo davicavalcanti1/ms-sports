@@ -17,6 +17,37 @@ export interface Product {
 
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
+const getPrice = (title: string, category: string): number => {
+    const t = title.toLowerCase();
+    const c = category.toLowerCase();
+
+    if (t.includes('polo')) return 165;
+    if (t.includes('meia')) return 50;
+    if (t.includes('corta vento')) return 270;
+    if (t.includes('retrô') || t.includes('retro')) return 190;
+    if (t.includes('jogador') || t.includes('player')) return 190;
+    if (t.includes('torcedor') || t.includes('fan')) return 150;
+    if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1')) return 240;
+
+    if (t.includes('kit')) {
+        if (t.includes('calça') || t.includes('calca')) {
+            if (t.includes('regata')) return 280;
+            if (t.includes('camisa')) return 250;
+        }
+        if (t.includes('short') && t.includes('regata')) return 250;
+    }
+
+    if (t.includes('short')) {
+        if (c === 'nba' || t.includes('nba')) return 140;
+        return 95; // Futebol short
+    }
+
+    if (c === 'nba' || t.includes('basquete') || t.includes('basketball')) return 240;
+    if (c === 'infantil' || t.includes('kids') || t.includes('infantil')) return 180;
+
+    return 150; // Versão torcedor default
+};
+
 // Map the raw JSON to our base Product interface
 export const baseProducts: Product[] = (catalogData as any[])
     .filter((item: any) => item.images && item.images.length > 0)
@@ -36,13 +67,13 @@ export const baseProducts: Product[] = (catalogData as any[])
         return {
             id: item.id,
             name: item.title,
-            price: 150, // Default price as requested
+            price: getPrice(item.title, item.category || ''),
             category: item.category,
             image: images.length > 0 ? images[0] : '/placeholder.jpg',
             images: images,
             description: item.description || item.title,
             stock_status: item.stock_status,
-            stock_quantity: 0, // Default stock as requested
+            stock_quantity: 0,
             original_url: item.original_url,
             is_visible: true
         };
