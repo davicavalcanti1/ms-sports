@@ -49,19 +49,17 @@ const CATEGORY_BANNERS = [
 
 export default function Home() {
     return (
-        <div className="space-y-0 relative">
-            {/* Hero Background — bundled via Vite, independente do nginx */}
-            <div className="fixed inset-0 -z-10">
-                <img
-                    alt="Stadium background"
-                    className="w-full h-full object-cover"
-                    src={stadiumImg}
-                />
-                <div className="absolute inset-0 bg-[#0a0a0a]/50"></div>
-            </div>
-
-            {/* Hero Section */}
-            <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
+        <div className="space-y-0">
+            {/* Hero Section — background inline garante que a imagem aparece independente do nginx */}
+            <section
+                className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10"
+                style={{
+                    backgroundImage: `url(${stadiumImg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <div className="absolute inset-0 bg-[#0a0a0a]/55 pointer-events-none" />
                 <div className="relative z-10 space-y-4 max-w-sm">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
