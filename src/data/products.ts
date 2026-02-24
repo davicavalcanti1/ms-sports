@@ -22,6 +22,10 @@ if (typeof window !== 'undefined') {
         ? 'Using Nginx Reverse Proxy (/external-images)'
         : (IMAGE_BASE_URL || 'Using local public folder');
     console.log('🖼️ Image Source Mode:', logValue);
+
+    if (IMAGE_BASE_URL && IMAGE_BASE_URL.startsWith('http://') && window.location.protocol === 'https:') {
+        console.error('⚠️ ALERTA: Você está tentando carregar imagens via HTTP em um site HTTPS. Isso será bloqueado. Mude o VITE_IMAGE_BASE_URL para "/external-images" no Easypanel Build Args.');
+    }
 }
 
 const getPrice = (title: string, category: string): number => {
