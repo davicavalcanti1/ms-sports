@@ -56,7 +56,7 @@ export default function Home() {
                     src="/external-images/products/stadium.jpg"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-center"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_60%]"
                 />
                 <div className="absolute inset-0 bg-[#0a0a0a]/55" />
                 <div className="relative z-10 space-y-4 max-w-sm">
