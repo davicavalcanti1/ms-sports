@@ -56,7 +56,7 @@ export default function Home() {
                     src="/external-images/products/stadium.jpg"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-center"
                 />
                 <div className="absolute inset-0 bg-[#0a0a0a]/55" />
                 <div className="relative z-10 space-y-4 max-w-sm">
@@ -119,9 +119,9 @@ export default function Home() {
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[100px] sm:min-w-[130px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1.5 group flex-shrink-0"
+                            className="min-w-[120px] sm:min-w-[150px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1.5 group flex-shrink-0"
                         >
-                            <div className="relative h-28 sm:h-36 rounded-md bg-[#1a1d23] overflow-hidden">
+                            <div className="relative h-36 sm:h-44 rounded-md bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
