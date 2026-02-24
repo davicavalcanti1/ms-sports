@@ -1,4 +1,4 @@
-import { Star, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
 import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
