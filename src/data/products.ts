@@ -18,7 +18,10 @@ export interface Product {
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 if (typeof window !== 'undefined') {
-    console.log('🖼️ Image Base URL:', IMAGE_BASE_URL || 'Using local public folder (VITE_IMAGE_BASE_URL not set)');
+    const logValue = IMAGE_BASE_URL === '/external-images'
+        ? 'Using Nginx Reverse Proxy (/external-images)'
+        : (IMAGE_BASE_URL || 'Using local public folder');
+    console.log('🖼️ Image Source Mode:', logValue);
 }
 
 const getPrice = (title: string, category: string): number => {
