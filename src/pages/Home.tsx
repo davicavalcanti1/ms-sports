@@ -116,14 +116,14 @@ export default function Home() {
                     </div>
                     <Link to="/catalog" className="text-primary text-xs font-bold tracking-widest uppercase hover:underline">Ver Todas</Link>
                 </div>
-                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+                <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
                     {CAROUSEL_ITEMS.map((item) => (
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[200px] sm:min-w-[240px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-3 flex flex-col gap-3 group flex-shrink-0"
+                            className="min-w-[140px] sm:min-w-[170px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-xl p-2 flex flex-col gap-2 group flex-shrink-0"
                         >
-                            <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] overflow-hidden">
+                            <div className="relative aspect-[3/4] rounded-lg bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -131,17 +131,13 @@ export default function Home() {
                                     referrerPolicy="no-referrer"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
-                                    <Star className="w-3 h-3 text-primary fill-primary" />
-                                </button>
-                                <div className="absolute bottom-3 left-3 flex gap-1 flex-wrap">
-                                    <span className={`${item.tagColor} text-[9px] font-black px-2 py-0.5 rounded`}>{item.tag}</span>
+                                <div className="absolute bottom-2 left-2">
+                                    <span className={`${item.tagColor} text-[8px] font-black px-1.5 py-0.5 rounded`}>{item.tag}</span>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{item.category}</p>
-                                <h4 className="text-sm font-bold text-white truncate mt-0.5">{item.name}</h4>
-                                <p className="text-base font-bold text-white mt-1">{item.price}</p>
+                                <h4 className="text-xs font-bold text-white truncate">{item.name}</h4>
+                                <p className="text-xs font-bold text-primary mt-0.5">{item.price}</p>
                             </div>
                         </Link>
                     ))}
