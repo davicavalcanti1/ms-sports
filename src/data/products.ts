@@ -16,7 +16,7 @@ export interface Product {
 }
 
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
-const IMAGE_PATH_PREFIX = import.meta.env.VITE_IMAGE_PATH_PREFIX || 'products';
+const IMAGE_PATH_PREFIX = import.meta.env.VITE_IMAGE_PATH_PREFIX ?? 'products';
 
 if (typeof window !== 'undefined') {
     const logValue = IMAGE_BASE_URL === '/external-images'
