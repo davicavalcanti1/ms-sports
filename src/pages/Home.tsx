@@ -1,5 +1,6 @@
 import { ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { formatImageUrl } from '../data/products';
 
 export default function Home() {
     return (
@@ -67,7 +68,7 @@ export default function Home() {
                     {/* Flamengo */}
                     <Link to="/product/yupoo-1" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
                         <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Flamengo Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="/products/yupoo-1/1.jpg" referrerPolicy="no-referrer" />
+                            <img alt="Flamengo Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-1', 1)} referrerPolicy="no-referrer" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
                                 <Star className="w-3 h-3 text-primary fill-primary" />
@@ -87,7 +88,7 @@ export default function Home() {
                     {/* São Paulo - Using generic ID yupoo-2 for now as placeholder or next available */}
                     <Link to="/product/yupoo-2" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
                         <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Palmeiras Special" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="/products/yupoo-2/1.jpg" referrerPolicy="no-referrer" />
+                            <img alt="Palmeiras Special" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-2', 1)} referrerPolicy="no-referrer" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             <div className="absolute bottom-3 left-3 flex gap-2">
                                 <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded">OFICIAL</span>
@@ -103,7 +104,7 @@ export default function Home() {
                     {/* Fluminense */}
                     <Link to="/product/yupoo-13" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
                         <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Fluminense Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="/products/yupoo-13/1.jpg" referrerPolicy="no-referrer" />
+                            <img alt="Fluminense Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-13', 1)} referrerPolicy="no-referrer" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         <div>
@@ -116,7 +117,7 @@ export default function Home() {
                     {/* Wizards - Example, using generic ID yupoo-4 */}
                     <Link to="/product/yupoo-4" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
                         <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Cruzeiro POLO" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="/products/yupoo-4/1.jpg" referrerPolicy="no-referrer" />
+                            <img alt="Cruzeiro POLO" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-4', 1)} referrerPolicy="no-referrer" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             <div className="absolute bottom-3 left-3 flex gap-2">
                                 <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded">NBA</span>

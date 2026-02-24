@@ -60,6 +60,15 @@ const getPrice = (title: string, category: string): number => {
     return 150; // Versão torcedor default
 };
 
+export const formatImageUrl = (productId: string, index: number, ext: string = '.jpg'): string => {
+    if (IMAGE_BASE_URL) {
+        const prefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
+        return `${IMAGE_BASE_URL}/${prefix}${productId}/${index}${ext}`;
+    }
+    const localPrefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
+    return `/${localPrefix}${productId}/${index}${ext}`;
+};
+
 // Map the raw JSON to our base Product interface
 export const baseProducts: Product[] = (catalogData as any[])
     .filter((item: any) => item.images && item.images.length > 0)
@@ -68,13 +77,7 @@ export const baseProducts: Product[] = (catalogData as any[])
         if (item.images && item.images.length > 0) {
             images = item.images.slice(0, 3).map((imgUrl: string, index: number) => {
                 const ext = imgUrl.toLowerCase().endsWith('.png') ? '.png' : '.jpg';
-                if (IMAGE_BASE_URL) {
-                    const prefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
-                    return `${IMAGE_BASE_URL}/${prefix}${item.id}/${index + 1}${ext}`;
-                }
-                // Fallback to serving from the local public directory if no base URL is provided
-                const localPrefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
-                return `/${localPrefix}${item.id}/${index + 1}${ext}`;
+                return formatImageUrl(item.id, index + 1, ext);
             });
         }
 
