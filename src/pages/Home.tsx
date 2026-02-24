@@ -120,9 +120,9 @@ export default function Home() {
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[90px] sm:min-w-[120px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1 group flex-shrink-0"
+                            className="min-w-[70px] sm:min-w-[90px] bg-white/[0.03] border border-primary/20 rounded-lg p-1 flex flex-col gap-1 group flex-shrink-0"
                         >
-                            <div className="relative aspect-[3/4] rounded-md bg-[#1a1d23] overflow-hidden">
+                            <div className="relative h-20 sm:h-28 rounded-md bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -131,12 +131,12 @@ export default function Home() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                                 <div className="absolute bottom-1 left-1">
-                                    <span className={`${item.tagColor} text-[7px] font-black px-1 py-px rounded`}>{item.tag}</span>
+                                    <span className={`${item.tagColor} text-[6px] font-black px-1 py-px rounded`}>{item.tag}</span>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="text-[10px] font-bold text-white truncate leading-tight">{item.name}</h4>
-                                <p className="text-[10px] font-bold text-primary">{item.price}</p>
+                                <h4 className="text-[9px] font-bold text-white truncate leading-tight">{item.name}</h4>
+                                <p className="text-[9px] font-bold text-primary">{item.price}</p>
                             </div>
                         </Link>
                     ))}
@@ -151,7 +151,7 @@ export default function Home() {
                     <Link
                         key={banner.productId}
                         to={banner.to}
-                        className="block relative w-full h-16 sm:h-24 rounded-xl overflow-hidden group"
+                        className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group"
                     >
                         <img
                             alt={banner.title}
@@ -159,13 +159,15 @@ export default function Home() {
                             src={formatImageUrl(banner.productId, 1)}
                             referrerPolicy="no-referrer"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent"></div>
-                        <div className="absolute inset-0 px-4 flex items-center gap-3">
-                            <span className="text-lg">{banner.emoji}</span>
-                            <div>
-                                <p className="text-primary font-black text-[9px] tracking-widest uppercase leading-none">{banner.subtitle}</p>
-                                <h4 className="text-sm sm:text-base font-black italic uppercase leading-tight">{banner.title.replace('\n', ' ')}</h4>
-                            </div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                        <div className="absolute inset-0 p-6 flex flex-col justify-center">
+                            <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">
+                                {banner.emoji} {banner.subtitle}
+                            </span>
+                            <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1 whitespace-pre-line">
+                                {banner.title}
+                            </h4>
+                            <p className="text-xs text-gray-300 max-w-[200px]">{banner.desc}</p>
                         </div>
                     </Link>
                 ))}
