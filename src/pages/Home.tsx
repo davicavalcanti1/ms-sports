@@ -53,7 +53,7 @@ export default function Home() {
             <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
                 {/* Stadium background — servida pelo proxy nginx na VPS */}
                 <img
-                    src="/external-images/stadium.jpg"
+                    src="/external-images/products/stadium.jpg"
                     alt=""
                     aria-hidden="true"
                     className="absolute inset-0 w-full h-full object-cover object-center"
