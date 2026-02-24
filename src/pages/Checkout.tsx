@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { buildWhatsappUrl } from '../lib/whatsapp';
 
 export default function Checkout() {
     const { cart, cartTotal, clearCart } = useCart();
@@ -19,7 +20,6 @@ export default function Checkout() {
         e.preventDefault();
         setIsProcessing(true);
 
-        const phoneNumber = "5583998168765";
         let message = `Olá, gostaria de finalizar meu pedido do MS Sports!\n\n*Resumo do Pedido:*\n`;
         cart.forEach(item => {
             message += `- ${item.quantity}x ${item.name} (Tam: ${item.size}) - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
@@ -28,8 +28,7 @@ export default function Checkout() {
         message += `\n*Total Previsto:* R$ ${cartTotal.toFixed(2).replace('.', ',')}\n`;
         message += `\n*Dados de Entrega:*\nNome: ${firstName} ${lastName}\nEndereço: ${address}, ${city} - ${postalCode}\nEmail: ${email}`;
 
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        const whatsappUrl = buildWhatsappUrl(message);
 
         setTimeout(() => {
             setIsProcessing(false);

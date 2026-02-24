@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../data/products';
 import type { Product } from '../data/products';
 import { useCart } from '../context/CartContext';
-import { ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
+import { buildWhatsappUrl } from '../lib/whatsapp';
+import { ShoppingBag, ArrowLeft, Loader2, MessageCircle } from 'lucide-react';
 
 export default function ProductDetails() {
     const { id } = useParams<{ id: string }>();
@@ -19,8 +20,13 @@ export default function ProductDetails() {
     const handleAddToCart = () => {
         if (product && selectedSize) {
             addToCart(product, selectedSize);
-            // Optional: Show feedback
         }
+    };
+
+    const handleBuyNow = () => {
+        if (!product || !selectedSize) return;
+        const message = `Olá! Tenho interesse em comprar:\n\n*${product.name}*\nTamanho: ${selectedSize}\nPreço: R$ ${product.price.toFixed(2).replace('.', ',')}\n\nPoderia me ajudar?`;
+        window.open(buildWhatsappUrl(message), '_blank');
     };
 
     // Filter available images (deduplicate and ensure valid)
@@ -186,6 +192,17 @@ export default function ProductDetails() {
 
                     <div className="space-y-4">
                         <button
+                            onClick={handleBuyNow}
+                            className={`w-full py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-colors ${selectedSize
+                                ? 'bg-[#25D366] text-white hover:bg-green-500'
+                                : 'bg-[#25D366]/40 text-gray-400 cursor-not-allowed'
+                                }`}
+                            disabled={!selectedSize}
+                        >
+                            <MessageCircle className="w-5 h-5" />
+                            {selectedSize ? 'Comprar Agora' : 'Selecione um Tamanho'}
+                        </button>
+                        <button
                             onClick={handleAddToCart}
                             className={`w-full py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-colors ${selectedSize
                                 ? 'bg-white text-secondary hover:bg-gray-200'
@@ -194,7 +211,7 @@ export default function ProductDetails() {
                             disabled={!selectedSize}
                         >
                             <ShoppingBag className="w-5 h-5" />
-                            {selectedSize ? 'Add to Cart' : 'Select a Size'}
+                            {selectedSize ? 'Adicionar ao Carrinho' : 'Selecione um Tamanho'}
                         </button>
                     </div>
 
