@@ -16,6 +16,7 @@ export interface Product {
 }
 
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
+const IMAGE_PATH_PREFIX = import.meta.env.VITE_IMAGE_PATH_PREFIX || 'products';
 
 if (typeof window !== 'undefined') {
     const logValue = IMAGE_BASE_URL === '/external-images'
@@ -68,10 +69,12 @@ export const baseProducts: Product[] = (catalogData as any[])
             images = item.images.slice(0, 3).map((imgUrl: string, index: number) => {
                 const ext = imgUrl.toLowerCase().endsWith('.png') ? '.png' : '.jpg';
                 if (IMAGE_BASE_URL) {
-                    return `${IMAGE_BASE_URL}/products/${item.id}/${index + 1}${ext}`;
+                    const prefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
+                    return `${IMAGE_BASE_URL}/${prefix}${item.id}/${index + 1}${ext}`;
                 }
                 // Fallback to serving from the local public directory if no base URL is provided
-                return `/products/${item.id}/${index + 1}${ext}`;
+                const localPrefix = IMAGE_PATH_PREFIX ? `${IMAGE_PATH_PREFIX}/` : '';
+                return `/${localPrefix}${item.id}/${index + 1}${ext}`;
             });
         }
 
