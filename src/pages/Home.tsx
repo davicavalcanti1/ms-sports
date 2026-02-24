@@ -119,9 +119,9 @@ export default function Home() {
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[70px] sm:min-w-[90px] bg-white/[0.03] border border-primary/20 rounded-lg p-1 flex flex-col gap-1 group flex-shrink-0"
+                            className="min-w-[100px] sm:min-w-[130px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1.5 group flex-shrink-0"
                         >
-                            <div className="relative h-20 sm:h-28 rounded-md bg-[#1a1d23] overflow-hidden">
+                            <div className="relative h-28 sm:h-36 rounded-md bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -130,12 +130,12 @@ export default function Home() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                                 <div className="absolute bottom-1 left-1">
-                                    <span className={`${item.tagColor} text-[6px] font-black px-1 py-px rounded`}>{item.tag}</span>
+                                    <span className={`${item.tagColor} text-[8px] font-black px-1.5 py-px rounded`}>{item.tag}</span>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="text-[9px] font-bold text-white truncate leading-tight">{item.name}</h4>
-                                <p className="text-[9px] font-bold text-primary">{item.price}</p>
+                                <h4 className="text-[11px] font-bold text-white truncate leading-tight">{item.name}</h4>
+                                <p className="text-[11px] font-bold text-primary">{item.price}</p>
                             </div>
                         </Link>
                     ))}
