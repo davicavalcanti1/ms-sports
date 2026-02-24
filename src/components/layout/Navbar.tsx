@@ -24,22 +24,22 @@ export default function Navbar() {
                         <NavLink to="/" className={({ isActive }) =>
                             `hidden sm:block px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-primary' : 'text-gray-300 hover:text-primary'}`
                         }>
-                            Home
+                            Início
                         </NavLink>
                         <NavLink to="/catalog" className={({ isActive }) =>
                             `hidden sm:block px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-primary' : 'text-gray-300 hover:text-primary'}`
                         }>
-                            Shop
+                            Loja
                         </NavLink>
 
                         {/* Mobile: ícones + label */}
                         <NavLink to="/" end className={linkClass}>
                             <Home className="sm:hidden w-5 h-5" />
-                            <span className="sm:hidden">Home</span>
+                            <span className="sm:hidden">Início</span>
                         </NavLink>
                         <NavLink to="/catalog" className={linkClass}>
                             <ShoppingCart className="sm:hidden w-5 h-5" />
-                            <span className="sm:hidden">Shop</span>
+                            <span className="sm:hidden">Loja</span>
                         </NavLink>
 
                         {/* Carrinho — sempre visível */}

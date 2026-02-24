@@ -75,7 +75,7 @@ export default function ProductDetails() {
     }
 
     if (!product) {
-        return <div className="text-center py-20 text-2xl text-gray-400">Product not found</div>;
+        return <div className="text-center py-20 text-2xl text-gray-400">Produto não encontrado</div>;
     }
 
     return (
@@ -84,7 +84,7 @@ export default function ProductDetails() {
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
             >
-                <ArrowLeft className="w-5 h-5" /> Back to Shop
+                <ArrowLeft className="w-5 h-5" /> Voltar para a Loja
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
@@ -166,13 +166,13 @@ export default function ProductDetails() {
                     </div>
 
                     <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                        {product.description || 'No description available.'}
+                        {product.description || 'Sem descrição disponível.'}
                     </p>
 
                     <div className="mb-8">
                         <div className="flex justify-between items-center mb-4">
-                            <label className="font-bold text-gray-200">Select Size</label>
-                            <button className="text-primary text-sm hover:underline">Size Guide</button>
+                            <label className="font-bold text-gray-200">Selecione o Tamanho</label>
+                            <button className="text-primary text-sm hover:underline">Guia de Tamanhos</button>
                         </div>
                         <div className="grid grid-cols-5 gap-4">
                             {sizes.map(size => (
@@ -217,9 +217,9 @@ export default function ProductDetails() {
 
                     <div className="mt-8 pt-8 border-t border-white/10 space-y-4 text-sm text-gray-400">
                         <div className="flex gap-4">
-                            <span>Free Shipping over $100</span>
+                            <span>Frete a combinar</span>
                             <span>•</span>
-                            <span>30 Day Returns</span>
+                            <span>Atendimento via WhatsApp</span>
                         </div>
                     </div>
                 </div>

@@ -49,9 +49,9 @@ const getPrice = (title: string, category: string): number => {
         if (t.includes('short') && t.includes('regata')) return 250;
     }
 
-    if (t.includes('short')) {
+    if (t.includes('short') || t.includes('pants')) {
         if (c === 'nba' || t.includes('nba')) return 140;
-        return 95; // Futebol short
+        return 95; // Futebol short / pants
     }
 
     if (c === 'nba' || t.includes('basquete') || t.includes('basketball')) return 240;

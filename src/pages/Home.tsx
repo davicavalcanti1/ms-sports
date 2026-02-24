@@ -21,7 +21,7 @@ const CAROUSEL_ITEMS = [
 // Banners de categoria — usando imagens reais de produtos via proxy
 const CATEGORY_BANNERS = [
     {
-        to: '/catalog',
+        to: '/catalog?group=Camisas',
         productId: 'yupoo-31',
         emoji: '🇧🇷',
         subtitle: 'BRASIL',
@@ -29,7 +29,7 @@ const CATEGORY_BANNERS = [
         desc: 'Flamengo, São Paulo, Fluminense e mais.',
     },
     {
-        to: '/catalog',
+        to: '/catalog?group=Camisas',
         productId: 'yupoo-18',
         emoji: '🌍',
         subtitle: 'EUROPA & MAIS',
@@ -37,12 +37,20 @@ const CATEGORY_BANNERS = [
         desc: 'Real Madrid, Barcelona, PSG e mais.',
     },
     {
-        to: '/catalog',
+        to: '/catalog?group=Basquete',
         productId: 'yupoo-2039',
         emoji: '🏀',
         subtitle: 'NBA',
-        title: 'BASKETBALL',
+        title: 'BASQUETE',
         desc: 'Lakers, Bulls, Knicks e mais.',
+    },
+    {
+        to: '/catalog?group=Sele%C3%A7%C3%B5es',
+        productId: 'yupoo-210',
+        emoji: '🌐',
+        subtitle: 'SELEÇÕES NACIONAIS',
+        title: 'SELEÇÕES',
+        desc: 'Brasil, Argentina, Portugal e mais.',
     },
 ];
 
