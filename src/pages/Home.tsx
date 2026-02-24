@@ -50,51 +50,54 @@ export default function Home() {
     return (
         <div className="space-y-0">
             {/* Hero Section */}
-            <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
-                {/* Stadium background — servida pelo proxy nginx na VPS */}
+            <section className="relative w-screen h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 pb-10">
+                {/* Stadium background */}
                 <img
                     src="/external-images/products/stadium.jpg"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-[center_60%]"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-[#0a0a0a]/55" />
-                <div className="relative z-10 space-y-4 max-w-sm">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                        Stadium Elite Edition
-                    </div>
-                    <h2 className="text-5xl md:text-6xl font-bold leading-[0.9] tracking-tight uppercase">
-                        ELEVATE <br /> <span className="text-primary italic">YOUR GAME</span>
-                    </h2>
-                    <p className="text-gray-300 text-sm leading-relaxed max-w-[280px]">
-                        Camisas Oficiais de Futebol & Basquete para o Atleta de Elite.
-                    </p>
-                    <div className="pt-4 flex flex-col gap-3">
-                        <a
-                            href={buildVendorUrl(VENDORS.rafael, "Olá Rafael! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
-                        >
-                            <MessageCircle className="w-4 h-4" />
-                            Falar com Rafael
-                        </a>
-                        <a
-                            href={buildVendorUrl(VENDORS.joaoVictor, "Olá João Victor! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
-                        >
-                            <MessageCircle className="w-4 h-4" />
-                            Falar com João Victor
-                        </a>
+                {/* conteúdo alinhado com o restante da página */}
+                <div className="relative z-10 w-full px-4 max-w-7xl mx-auto">
+                    <div className="space-y-4 max-w-sm">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                            Stadium Elite Edition
+                        </div>
+                        <h2 className="text-5xl md:text-6xl font-bold leading-[0.9] tracking-tight uppercase">
+                            ELEVATE <br /> <span className="text-primary italic">YOUR GAME</span>
+                        </h2>
+                        <p className="text-gray-300 text-sm leading-relaxed max-w-[280px]">
+                            Camisas Oficiais de Futebol & Basquete para o Atleta de Elite.
+                        </p>
+                        <div className="pt-4 flex flex-col gap-3">
+                            <a
+                                href={buildVendorUrl(VENDORS.rafael, "Olá Rafael! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
+                            >
+                                <MessageCircle className="w-4 h-4" />
+                                Falar com Rafael
+                            </a>
+                            <a
+                                href={buildVendorUrl(VENDORS.joaoVictor, "Olá João Victor! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
+                            >
+                                <MessageCircle className="w-4 h-4" />
+                                Falar com João Victor
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Search bar */}
-            <div className="px-2 -mt-6 relative z-20 max-w-7xl mx-auto">
+            <div className="px-4 -mt-6 relative z-20 max-w-7xl mx-auto">
                 <label className="flex items-center bg-white/[0.03] backdrop-blur-xl rounded-xl px-4 py-3 gap-3 border border-primary/20 shadow-2xl">
                     <span className="text-primary">🔍</span>
                     <input
@@ -119,9 +122,9 @@ export default function Home() {
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[120px] sm:min-w-[150px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1.5 group flex-shrink-0"
+                            className="min-w-[120px] sm:min-w-[180px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1.5 group flex-shrink-0"
                         >
-                            <div className="relative h-36 sm:h-44 rounded-md bg-[#1a1d23] overflow-hidden">
+                            <div className="relative h-36 sm:h-52 rounded-md bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
