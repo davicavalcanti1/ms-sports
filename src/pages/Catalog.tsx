@@ -191,7 +191,7 @@ export default function Catalog() {
                 )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                 {visibleProducts.map((product) => (
                     <Link key={product.id} to={`/product/${product.id}`} className="group">
                         <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-800 mb-4">
@@ -230,9 +230,9 @@ export default function Catalog() {
                                 </button>
                             </div>
                         </div>
-                        <h3 className="text-lg font-bold group-hover:text-primary transition-colors line-clamp-1">{product.name}</h3>
-                        <p className="text-gray-400 text-sm">{product.category}</p>
-                        <p className="text-primary font-bold mt-1">
+                        <h3 className="text-sm sm:text-lg font-bold group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-1">{product.name}</h3>
+                        <p className="text-gray-400 text-xs sm:text-sm">{product.category}</p>
+                        <p className="text-primary font-bold mt-1 text-sm sm:text-base">
                             {product.price > 0 ? `R$ ${product.price.toFixed(2)}` : 'Preço sob consulta'}
                         </p>
                     </Link>
