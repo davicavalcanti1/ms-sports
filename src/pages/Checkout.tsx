@@ -19,7 +19,7 @@ export default function Checkout() {
         e.preventDefault();
         setIsProcessing(true);
 
-        const phoneNumber = "5511999999999"; // Placeholder number
+        const phoneNumber = "5583998168765";
         let message = `Olá, gostaria de finalizar meu pedido do MS Sports!\n\n*Resumo do Pedido:*\n`;
         cart.forEach(item => {
             message += `- ${item.quantity}x ${item.name} (Tam: ${item.size}) - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n`;
