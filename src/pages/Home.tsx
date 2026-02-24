@@ -1,6 +1,7 @@
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
+import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
 
 export default function Home() {
     return (
@@ -30,15 +31,25 @@ export default function Home() {
                     <p className="text-gray-300 text-sm leading-relaxed max-w-[280px]">
                         Camisas Oficiais de Futebol & Basquete para o Atleta de Elite.
                     </p>
-                    <div className="pt-4">
-                        <Link
-                            to="/catalog"
-                            className="inline-flex w-full bg-primary text-black font-black px-8 py-4 rounded-lg items-center justify-center gap-2 hover:brightness-110 transition-all uppercase tracking-wider text-sm"
-                            style={{ boxShadow: '0 0 20px rgba(212,175,55,0.3)' }}
+                    <div className="pt-4 flex flex-col gap-3">
+                        <a
+                            href={buildVendorUrl(VENDORS.rafael, "Olá Rafael! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
                         >
-                            FALAR COM VENDEDOR
-                            <ArrowRight className="w-5 h-5" />
-                        </Link>
+                            <MessageCircle className="w-4 h-4" />
+                            Falar com Rafael
+                        </a>
+                        <a
+                            href={buildVendorUrl(VENDORS.joaoVictor, "Olá João Victor! Vim pelo site da MS Sports e gostaria de saber mais sobre os produtos.")}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex w-full bg-[#25D366] text-white font-black px-6 py-3.5 rounded-lg items-center justify-center gap-2 hover:bg-green-500 transition-all text-sm"
+                        >
+                            <MessageCircle className="w-4 h-4" />
+                            Falar com João Victor
+                        </a>
                     </div>
                 </div>
             </section>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getProducts } from '../data/products';
 import type { Product } from '../data/products';
-import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight } from 'lucide-react';
+import { buildWhatsappUrl } from '../lib/whatsapp';
+import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight, MessageCircle } from 'lucide-react';
 
 type FilterGroup = "Todos" | "Camisas" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
 
@@ -19,8 +20,15 @@ const filterGroups: Record<Exclude<FilterGroup, "Todos">, string[]> = {
 };
 
 export default function Catalog() {
+    const navigate = useNavigate();
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const handleBuyNow = (e: React.MouseEvent, product: Product) => {
+        e.preventDefault();
+        const message = `Olá! Tenho interesse em comprar:\n\n*${product.name}*\nPreço: R$ ${product.price.toFixed(2).replace('.', ',')}\n\nPoderia me ajudar?`;
+        window.open(buildWhatsappUrl(message), '_blank');
+    };
 
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedGroup, setSelectedGroup] = useState<FilterGroup>('Todos');
@@ -206,9 +214,19 @@ export default function Catalog() {
                                 </div>
                             )}
 
-                            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="w-full py-3 bg-white text-secondary font-bold rounded-lg shadow-lg hover:bg-primary transition-colors">
-                                    View Details
+                            <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2">
+                                <button
+                                    onClick={(e) => handleBuyNow(e, product)}
+                                    className="w-full py-2.5 bg-[#25D366] text-white font-bold rounded-lg shadow-lg hover:bg-green-500 transition-colors flex items-center justify-center gap-2 text-sm"
+                                >
+                                    <MessageCircle className="w-4 h-4" />
+                                    Comprar Agora
+                                </button>
+                                <button
+                                    onClick={(e) => { e.preventDefault(); navigate(`/product/${product.id}`); }}
+                                    className="w-full py-2.5 bg-white text-secondary font-bold rounded-lg shadow-lg hover:bg-primary transition-colors text-sm"
+                                >
+                                    Ver Detalhes
                                 </button>
                             </div>
                         </div>
