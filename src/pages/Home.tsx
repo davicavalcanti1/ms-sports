@@ -2,6 +2,7 @@ import { MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
 import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
+import stadiumImg from '../assets/stadium.jpg';
 
 // Carrossel: um produto real de cada categoria, usando formatImageUrl (proxy nginx)
 const CAROUSEL_ITEMS = [
@@ -49,12 +50,12 @@ const CATEGORY_BANNERS = [
 export default function Home() {
     return (
         <div className="space-y-0 relative">
-            {/* Hero Background — arquivo estático da public/ */}
+            {/* Hero Background — bundled via Vite, independente do nginx */}
             <div className="fixed inset-0 -z-10">
                 <img
                     alt="Stadium background"
                     className="w-full h-full object-cover"
-                    src="/stadium.jpg"
+                    src={stadiumImg}
                 />
                 <div className="absolute inset-0 bg-[#0a0a0a]/50"></div>
             </div>
@@ -116,28 +117,28 @@ export default function Home() {
                     </div>
                     <Link to="/catalog" className="text-primary text-xs font-bold tracking-widest uppercase hover:underline">Ver Todas</Link>
                 </div>
-                <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
+                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3">
                     {CAROUSEL_ITEMS.map((item) => (
                         <Link
                             key={item.id}
                             to={`/product/${item.id}`}
-                            className="min-w-[140px] sm:min-w-[170px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-xl p-2 flex flex-col gap-2 group flex-shrink-0"
+                            className="min-w-[90px] sm:min-w-[120px] bg-white/[0.03] border border-primary/20 rounded-lg p-1.5 flex flex-col gap-1 group flex-shrink-0"
                         >
-                            <div className="relative aspect-[3/4] rounded-lg bg-[#1a1d23] overflow-hidden">
+                            <div className="relative aspect-[3/4] rounded-md bg-[#1a1d23] overflow-hidden">
                                 <img
                                     alt={item.name}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     src={formatImageUrl(item.id, 1)}
                                     referrerPolicy="no-referrer"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <div className="absolute bottom-2 left-2">
-                                    <span className={`${item.tagColor} text-[8px] font-black px-1.5 py-0.5 rounded`}>{item.tag}</span>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                <div className="absolute bottom-1 left-1">
+                                    <span className={`${item.tagColor} text-[7px] font-black px-1 py-px rounded`}>{item.tag}</span>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="text-xs font-bold text-white truncate">{item.name}</h4>
-                                <p className="text-xs font-bold text-primary mt-0.5">{item.price}</p>
+                                <h4 className="text-[10px] font-bold text-white truncate leading-tight">{item.name}</h4>
+                                <p className="text-[10px] font-bold text-primary">{item.price}</p>
                             </div>
                         </Link>
                     ))}
