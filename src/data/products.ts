@@ -33,13 +33,13 @@ const getPrice = (title: string, category: string): number => {
     const t = title.toLowerCase();
     const c = category.toLowerCase();
 
+    if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1')) return 240;
     if (t.includes('polo')) return 165;
     if (t.includes('meia')) return 50;
     if (t.includes('corta vento')) return 270;
     if (t.includes('retrô') || t.includes('retro')) return 190;
     if (t.includes('jogador') || t.includes('player')) return 190;
     if (t.includes('torcedor') || t.includes('fan')) return 150;
-    if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1')) return 240;
 
     if (t.includes('kit')) {
         if (t.includes('calça') || t.includes('calca')) {

@@ -7,7 +7,7 @@ import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight } from 'lucide
 type FilterGroup = "Todos" | "Camisas" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
 
 const filterGroups: Record<Exclude<FilterGroup, "Todos">, string[]> = {
-    "Camisas": ["Versão Jogador", "Versão Torcedor", "Retrô"],
+    "Camisas": ["Versão Jogador (Player Version)", "Versão Torcedor (Fan Version)", "Retrô"],
     "Basquete": ["Camisa Basquete", "Short NBA"],
     "F1": ["Camisa de Formula 1"],
     "Kits": ["Kit Calça e Regata", "Kit Short e Regata", "Kit Calça e Camisa"],
@@ -84,7 +84,27 @@ export default function Catalog() {
         if (selectedGroup !== 'Todos') {
             if (selectedTeam) {
                 // If a specific sub-category is chosen
-                if (!titleLower.includes(selectedTeam.toLowerCase())) {
+                // Map display labels to actual search terms
+                const teamSearchMap: Record<string, string[]> = {
+                    'Versão Jogador (Player Version)': ['jogador', 'player'],
+                    'Versão Torcedor (Fan Version)': ['torcedor', 'fan'],
+                    'Retrô': ['retrô', 'retro'],
+                    'Camisa Basquete': ['basquete', 'basketball', 'nba'],
+                    'Short NBA': ['short', 'nba'],
+                    'Camisa de Formula 1': ['f1', 'formula 1', 'fórmula 1'],
+                    'Kit Calça e Regata': ['kit', 'calça', 'regata'],
+                    'Kit Short e Regata': ['kit', 'short', 'regata'],
+                    'Kit Calça e Camisa': ['kit', 'calça', 'camisa'],
+                    'Short de Futebol': ['short'],
+                    'Conjunto Kids': ['kids', 'infantil'],
+                    'Meia': ['meia'],
+                };
+                const searchTerms = teamSearchMap[selectedTeam];
+                if (searchTerms) {
+                    if (!searchTerms.some(term => titleLower.includes(term))) {
+                        return false;
+                    }
+                } else if (!titleLower.includes(selectedTeam.toLowerCase())) {
                     return false;
                 }
             } else {
@@ -166,19 +186,26 @@ export default function Catalog() {
 
                 {/* Sub-teams for selected group */}
                 {selectedGroup !== 'Todos' && selectedGroup !== 'Feminino' && selectedGroup !== 'Infantil' && selectedGroup !== 'Polo' && filterGroups[selectedGroup]?.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/5 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                        {filterGroups[selectedGroup].map(team => (
-                            <button
-                                key={team}
-                                onClick={() => handleTeamClick(team)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedTeam === team
-                                    ? 'bg-white text-secondary'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-                                    }`}
-                            >
-                                {team}
-                            </button>
-                        ))}
+                    <div className="mt-4 pt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {selectedGroup === 'Camisas' && (
+                            <p className="text-[11px] text-gray-500 mb-3">
+                                <span className="text-primary font-bold">Player Version</span> = versão de jogador (tecido profissional) &nbsp;·&nbsp; <span className="text-gray-400 font-bold">Fan Version</span> = versão de torcedor (uso casual)
+                            </p>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                            {filterGroups[selectedGroup].map(team => (
+                                <button
+                                    key={team}
+                                    onClick={() => handleTeamClick(team)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedTeam === team
+                                        ? 'bg-white text-secondary'
+                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                        }`}
+                                >
+                                    {team}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

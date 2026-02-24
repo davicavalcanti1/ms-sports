@@ -22,6 +22,7 @@ export default function Navbar() {
                             </div>
                         </div>
                     </div>
+                    {/* Desktop cart */}
                     <div className="hidden md:block">
                         <div className="ml-4 flex items-center md:ml-6 space-x-3">
                             <Link to="/cart" className="relative p-2 rounded-full hover:bg-white/5 text-white transition-colors">
@@ -32,7 +33,14 @@ export default function Navbar() {
                             </Link>
                         </div>
                     </div>
-                    <div className="-mr-2 flex md:hidden">
+                    {/* Mobile: carrinho + hamburguer sempre visiveis */}
+                    <div className="-mr-2 flex md:hidden items-center gap-1">
+                        <Link to="/cart" className="relative p-2 rounded-full hover:bg-white/5 text-white transition-colors">
+                            <ShoppingBag className="h-6 w-6" />
+                            {cartCount > 0 && (
+                                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full border border-[#0a0a0a]"></span>
+                            )}
+                        </Link>
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
@@ -47,8 +55,7 @@ export default function Navbar() {
                 <div className="md:hidden bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-primary/10">
                     <div className="px-4 pt-2 pb-4 space-y-1">
                         <Link to="/" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white hover:text-primary text-sm font-bold uppercase tracking-widest border-b border-white/5">Home</Link>
-                        <Link to="/catalog" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white hover:text-primary text-sm font-bold uppercase tracking-widest border-b border-white/5">Shop</Link>
-                        <Link to="/cart" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white hover:text-primary text-sm font-bold uppercase tracking-widest">Cart ({cartCount})</Link>
+                        <Link to="/catalog" onClick={() => setIsOpen(false)} className="block px-3 py-3 text-white hover:text-primary text-sm font-bold uppercase tracking-widest">Shop</Link>
                     </div>
                 </div>
             )}
