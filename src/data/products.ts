@@ -17,6 +17,10 @@ export interface Product {
 
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
+if (typeof window !== 'undefined') {
+    console.log('🖼️ Image Base URL:', IMAGE_BASE_URL || 'Using local public folder (VITE_IMAGE_BASE_URL not set)');
+}
+
 const getPrice = (title: string, category: string): number => {
     const t = title.toLowerCase();
     const c = category.toLowerCase();
