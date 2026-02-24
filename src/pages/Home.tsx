@@ -3,23 +3,65 @@ import { Link } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
 import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
 
+// Carrossel: um produto real de cada categoria, usando formatImageUrl (proxy nginx)
+const CAROUSEL_ITEMS = [
+    { id: 'yupoo-31',   label: 'Player Version',    tag: 'PLAYER',    tagColor: 'bg-primary text-black',        category: 'Soccer',     name: 'Flamenco Special Edition',       price: 'R$ 190,00' },
+    { id: 'yupoo-2',    label: 'Versão Torcedor',   tag: 'TORCEDOR',  tagColor: 'bg-white/20 text-white',       category: 'Soccer',     name: 'Palmeiras Special Edition',      price: 'R$ 150,00' },
+    { id: 'yupoo-67',   label: 'Feminino',          tag: 'WOMEN',     tagColor: 'bg-pink-500/80 text-white',    category: 'Feminino',   name: 'Cruzeiro Training Feminino',     price: 'R$ 150,00' },
+    { id: 'yupoo-17',   label: 'Infantil',          tag: 'KIDS',      tagColor: 'bg-blue-400/80 text-white',    category: 'Infantil',   name: 'Tottenham III Kids',             price: 'R$ 180,00' },
+    { id: 'yupoo-1710', label: 'Fórmula 1',         tag: 'F1',        tagColor: 'bg-red-600 text-white',        category: 'F1',         name: 'F1 Formula One 2025',            price: 'R$ 240,00' },
+    { id: 'yupoo-2039', label: 'NBA',               tag: 'NBA',       tagColor: 'bg-red-600 text-white',        category: 'Basketball', name: 'NBA Luka Doncic Jersey',         price: 'R$ 240,00' },
+    { id: 'yupoo-976',  label: 'Short Futebol',     tag: 'SHORT',     tagColor: 'bg-green-600 text-white',      category: 'Soccer',     name: 'Real Betis Home Shorts',         price: 'R$ 95,00'  },
+    { id: 'yupoo-3971', label: 'Short NBA',         tag: 'NBA SHORT', tagColor: 'bg-orange-500 text-white',     category: 'Basketball', name: 'New York Knicks Shorts',         price: 'R$ 140,00' },
+    { id: 'yupoo-210',  label: 'Kit',               tag: 'KIT',       tagColor: 'bg-yellow-500 text-black',     category: 'Kit',        name: 'Kit Brasil Training 2022',       price: 'R$ 280,00' },
+    { id: 'yupoo-59',   label: 'Retrô',             tag: 'RETRÔ',     tagColor: 'bg-amber-700 text-white',      category: 'Retro',      name: 'Botafogo Retrô 1996',            price: 'R$ 190,00' },
+    { id: 'yupoo-4',    label: 'Polo',              tag: 'POLO',      tagColor: 'bg-primary text-black',        category: 'Polo',       name: 'Cruzeiro POLO Jersey',           price: 'R$ 165,00' },
+];
+
+// Banners de categoria — usando imagens reais de produtos via proxy
+const CATEGORY_BANNERS = [
+    {
+        to: '/catalog',
+        productId: 'yupoo-31',
+        emoji: '🇧🇷',
+        subtitle: 'BRASIL',
+        title: 'TIMES\nBRASILEIROS',
+        desc: 'Flamengo, São Paulo, Fluminense e mais.',
+    },
+    {
+        to: '/catalog',
+        productId: 'yupoo-18',
+        emoji: '🌍',
+        subtitle: 'EUROPA & MAIS',
+        title: 'TIMES\nESTRANGEIROS',
+        desc: 'Real Madrid, Barcelona, PSG e mais.',
+    },
+    {
+        to: '/catalog',
+        productId: 'yupoo-2039',
+        emoji: '🏀',
+        subtitle: 'NBA',
+        title: 'BASKETBALL',
+        desc: 'Lakers, Bulls, Knicks e mais.',
+    },
+];
+
 export default function Home() {
     return (
         <div className="space-y-0 relative">
-            {/* Fixed Stadium Background */}
+            {/* Hero Background — usa imagem de produto real via proxy */}
             <div className="fixed inset-0 -z-10">
                 <img
-                    alt="Stadium background"
+                    alt="Hero background"
                     className="w-full h-full object-cover"
-                    src="/stadium.jpg"
+                    src={formatImageUrl('yupoo-31', 1)}
+                    referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-[#0a0a0a]/40"></div>
+                <div className="absolute inset-0 bg-[#0a0a0a]/60"></div>
             </div>
 
             {/* Hero Section */}
             <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
-
-
                 <div className="relative z-10 space-y-4 max-w-sm">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
@@ -66,132 +108,78 @@ export default function Home() {
                 </label>
             </div>
 
-            {/* Featured Jerseys */}
+            {/* Carrossel de categorias */}
             <section className="mt-12 max-w-7xl mx-auto relative z-10">
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h3 className="text-xl font-bold tracking-tight uppercase">DESTAQUES</h3>
-                        <p className="text-[10px] text-primary font-bold tracking-widest mt-1 uppercase">Temporada 24/25</p>
+                        <p className="text-[10px] text-primary font-bold tracking-widest mt-1 uppercase">Todas as categorias</p>
                     </div>
                     <Link to="/catalog" className="text-primary text-xs font-bold tracking-widest uppercase hover:underline">Ver Todas</Link>
                 </div>
-                <div className="flex gap-6 overflow-x-auto no-scrollbar pb-4">
-                    {/* Flamengo */}
-                    <Link to="/product/yupoo-1" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Flamengo Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-1', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
-                                <Star className="w-3 h-3 text-primary fill-primary" />
-                            </button>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded">OFICIAL</span>
-                                <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded">NEW</span>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+                    {CAROUSEL_ITEMS.map((item) => (
+                        <Link
+                            key={item.id}
+                            to={`/product/${item.id}`}
+                            className="min-w-[200px] sm:min-w-[240px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-3 flex flex-col gap-3 group flex-shrink-0"
+                        >
+                            <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] overflow-hidden">
+                                <img
+                                    alt={item.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    src={formatImageUrl(item.id, 1)}
+                                    referrerPolicy="no-referrer"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
+                                    <Star className="w-3 h-3 text-primary fill-primary" />
+                                </button>
+                                <div className="absolute bottom-3 left-3 flex gap-1 flex-wrap">
+                                    <span className={`${item.tagColor} text-[9px] font-black px-2 py-0.5 rounded`}>{item.tag}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Flamengo Home 24/25</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* São Paulo - Using generic ID yupoo-2 for now as placeholder or next available */}
-                    <Link to="/product/yupoo-2" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Palmeiras Special" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-2', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded">OFICIAL</span>
+                            <div>
+                                <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{item.category}</p>
+                                <h4 className="text-sm font-bold text-white truncate mt-0.5">{item.name}</h4>
+                                <p className="text-base font-bold text-white mt-1">{item.price}</p>
                             </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Palmeiras Special Edition</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* Fluminense */}
-                    <Link to="/product/yupoo-13" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Fluminense Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-13', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Fluminense Home 24/25</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* Wizards - Example, using generic ID yupoo-4 */}
-                    <Link to="/product/yupoo-4" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Cruzeiro POLO" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-4', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded">NBA</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Basketball</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Cruzeiro POLO</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
+                        </Link>
+                    ))}
                 </div>
             </section>
 
-            {/* Category Sections */}
+            {/* Category Banners */}
             <section className="mt-16 max-w-7xl mx-auto relative z-10 space-y-6">
                 <h3 className="text-xl font-bold tracking-tight uppercase mb-2">CATEGORIAS</h3>
 
-                {/* Times Brasileiros */}
-                <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group">
-                    <img
-                        alt="Times Brasileiros"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/flamengo.jpg"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
-                    <div className="absolute inset-0 p-6 flex flex-col justify-center">
-                        <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🇧🇷 BRASIL</span>
-                        <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />BRASILEIROS</h4>
-                        <p className="text-xs text-gray-300 max-w-[200px]">Flamengo, São Paulo, Fluminense e mais.</p>
-                    </div>
-                </Link>
-
-                {/* Times Estrangeiros */}
-                <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group">
-                    <img
-                        alt="Times Estrangeiros"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/saopaulo.jpg"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
-                    <div className="absolute inset-0 p-6 flex flex-col justify-center">
-                        <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🌍 EUROPA & MAIS</span>
-                        <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />ESTRANGEIROS</h4>
-                        <p className="text-xs text-gray-300 max-w-[200px]">Real Madrid, Barcelona, PSG e mais.</p>
-                    </div>
-                </Link>
-
-                {/* Basketball */}
-                <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group mb-12">
-                    <img
-                        alt="Basketball"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/wizards.jpg"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
-                    <div className="absolute inset-0 p-6 flex flex-col justify-center">
-                        <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🏀 NBA</span>
-                        <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">BASKETBALL</h4>
-                        <p className="text-xs text-gray-300 max-w-[200px]">Wizards, Lakers, Bulls e mais.</p>
-                    </div>
-                </Link>
+                {CATEGORY_BANNERS.map((banner) => (
+                    <Link
+                        key={banner.productId}
+                        to={banner.to}
+                        className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group"
+                    >
+                        <img
+                            alt={banner.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
+                            src={formatImageUrl(banner.productId, 1)}
+                            referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                        <div className="absolute inset-0 p-6 flex flex-col justify-center">
+                            <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">
+                                {banner.emoji} {banner.subtitle}
+                            </span>
+                            <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1 whitespace-pre-line">
+                                {banner.title}
+                            </h4>
+                            <p className="text-xs text-gray-300 max-w-[200px]">{banner.desc}</p>
+                        </div>
+                    </Link>
+                ))}
             </section>
+
+            <div className="h-12" />
         </div>
     );
 }
