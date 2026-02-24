@@ -2,7 +2,6 @@ import { MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
 import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
-import stadiumImg from '../assets/stadium.jpg';
 
 // Carrossel: um produto real de cada categoria, usando formatImageUrl (proxy nginx)
 const CAROUSEL_ITEMS = [
@@ -52,9 +51,9 @@ export default function Home() {
         <div className="space-y-0">
             {/* Hero Section */}
             <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
-                {/* Stadium background — tag img bundlada pelo Vite */}
+                {/* Stadium background — servida pelo proxy nginx na VPS */}
                 <img
-                    src={stadiumImg}
+                    src="/external-images/stadium.jpg"
                     alt=""
                     aria-hidden="true"
                     className="absolute inset-0 w-full h-full object-cover object-center"
