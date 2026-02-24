@@ -49,15 +49,14 @@ const CATEGORY_BANNERS = [
 export default function Home() {
     return (
         <div className="space-y-0 relative">
-            {/* Hero Background — usa imagem de produto real via proxy */}
+            {/* Hero Background — arquivo estático da public/ */}
             <div className="fixed inset-0 -z-10">
                 <img
-                    alt="Hero background"
+                    alt="Stadium background"
                     className="w-full h-full object-cover"
-                    src={formatImageUrl('yupoo-31', 1)}
-                    referrerPolicy="no-referrer"
+                    src="/stadium.jpg"
                 />
-                <div className="absolute inset-0 bg-[#0a0a0a]/60"></div>
+                <div className="absolute inset-0 bg-[#0a0a0a]/50"></div>
             </div>
 
             {/* Hero Section */}
