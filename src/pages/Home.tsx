@@ -50,16 +50,16 @@ const CATEGORY_BANNERS = [
 export default function Home() {
     return (
         <div className="space-y-0">
-            {/* Hero Section — background inline garante que a imagem aparece independente do nginx */}
-            <section
-                className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10"
-                style={{
-                    backgroundImage: `url(${stadiumImg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
-            >
-                <div className="absolute inset-0 bg-[#0a0a0a]/55 pointer-events-none" />
+            {/* Hero Section */}
+            <section className="relative w-full h-[75vh] flex flex-col justify-end overflow-hidden -mx-4 -mt-8 px-8 pb-10">
+                {/* Stadium background — tag img bundlada pelo Vite */}
+                <img
+                    src={stadiumImg}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-[#0a0a0a]/55" />
                 <div className="relative z-10 space-y-4 max-w-sm">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
@@ -151,23 +151,21 @@ export default function Home() {
                     <Link
                         key={banner.productId}
                         to={banner.to}
-                        className="block relative w-full aspect-[4/1] sm:aspect-[5/1] rounded-xl overflow-hidden group"
+                        className="block relative w-full h-16 sm:h-24 rounded-xl overflow-hidden group"
                     >
                         <img
                             alt={banner.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
+                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
                             src={formatImageUrl(banner.productId, 1)}
                             referrerPolicy="no-referrer"
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent"></div>
-                        <div className="absolute inset-0 p-3 sm:p-5 flex flex-col justify-center">
-                            <span className="text-primary font-black text-[9px] sm:text-[10px] tracking-[0.2em] uppercase mb-0.5">
-                                {banner.emoji} {banner.subtitle}
-                            </span>
-                            <h4 className="text-base sm:text-xl font-black italic uppercase leading-none whitespace-pre-line">
-                                {banner.title}
-                            </h4>
-                            <p className="hidden sm:block text-[10px] text-gray-300 mt-1">{banner.desc}</p>
+                        <div className="absolute inset-0 px-4 flex items-center gap-3">
+                            <span className="text-lg">{banner.emoji}</span>
+                            <div>
+                                <p className="text-primary font-black text-[9px] tracking-widest uppercase leading-none">{banner.subtitle}</p>
+                                <h4 className="text-sm sm:text-base font-black italic uppercase leading-tight">{banner.title.replace('\n', ' ')}</h4>
+                            </div>
                         </div>
                     </Link>
                 ))}
