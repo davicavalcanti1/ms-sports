@@ -151,7 +151,7 @@ export default function Home() {
                     <Link
                         key={banner.productId}
                         to={banner.to}
-                        className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group"
+                        className="block relative w-full aspect-[4/1] sm:aspect-[5/1] rounded-xl overflow-hidden group"
                     >
                         <img
                             alt={banner.title}
@@ -159,15 +159,15 @@ export default function Home() {
                             src={formatImageUrl(banner.productId, 1)}
                             referrerPolicy="no-referrer"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
-                        <div className="absolute inset-0 p-6 flex flex-col justify-center">
-                            <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent"></div>
+                        <div className="absolute inset-0 p-3 sm:p-5 flex flex-col justify-center">
+                            <span className="text-primary font-black text-[9px] sm:text-[10px] tracking-[0.2em] uppercase mb-0.5">
                                 {banner.emoji} {banner.subtitle}
                             </span>
-                            <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1 whitespace-pre-line">
+                            <h4 className="text-base sm:text-xl font-black italic uppercase leading-none whitespace-pre-line">
                                 {banner.title}
                             </h4>
-                            <p className="text-xs text-gray-300 max-w-[200px]">{banner.desc}</p>
+                            <p className="hidden sm:block text-[10px] text-gray-300 mt-1">{banner.desc}</p>
                         </div>
                     </Link>
                 ))}
