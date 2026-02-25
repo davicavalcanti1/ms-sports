@@ -76,7 +76,8 @@ export const baseProducts: Product[] = (catalogData as any[])
         let images: string[] = [];
         if (item.images && item.images.length > 0) {
             images = item.images.slice(0, 3).map((imgUrl: string, index: number) => {
-                const ext = imgUrl.toLowerCase().endsWith('.png') ? '.png' : '.jpg';
+                const lower = imgUrl.toLowerCase();
+                const ext = lower.endsWith('.png') ? '.png' : lower.endsWith('.jpeg') ? '.jpeg' : '.jpg';
                 return formatImageUrl(item.id, index + 1, ext);
             });
         }
