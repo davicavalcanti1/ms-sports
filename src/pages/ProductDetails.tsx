@@ -140,7 +140,7 @@ export default function ProductDetails() {
                                     onClick={() => setCurrentImageIndex(idx)}
                                     className={`aspect-square rounded-lg bg-gray-800 overflow-hidden cursor-pointer ring-2 transition-all ${currentImageIndex === idx ? 'ring-primary' : 'ring-transparent hover:ring-white/20'}`}
                                 >
-                                    <img src={img} alt={`View ${idx}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                    <img src={img} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                 </button>
                             ))}
                         </div>

@@ -168,7 +168,7 @@ export default function Catalog() {
         <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="mb-8 border-b border-white/10 pb-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
-                    <h1 className="text-4xl font-bold tracking-tighter">Shop Collection</h1>
+                    <h1 className="text-4xl font-bold tracking-tighter">Coleção</h1>
                     <div className="relative w-full md:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                         <input
