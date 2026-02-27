@@ -29,17 +29,337 @@ if (typeof window !== 'undefined') {
     }
 }
 
+// ─── Lista de clubes e seleções para extração de nome ───────────────────────
+
+const CLUBES_BR: Record<string, string> = {
+    'flamengo': 'Flamengo', 'flamingo': 'Flamengo',
+    'palmeiras': 'Palmeiras',
+    'corinthians': 'Corinthians',
+    'são paulo': 'São Paulo', 'sao paulo': 'São Paulo',
+    'fluminense': 'Fluminense',
+    'vasco': 'Vasco',
+    'botafogo': 'Botafogo',
+    'cruzeiro': 'Cruzeiro',
+    'atlético mineiro': 'Atlético-MG', 'atletico mineiro': 'Atlético-MG', 'atletico-mg': 'Atlético-MG',
+    'grêmio': 'Grêmio', 'gremio': 'Grêmio',
+    'internacional': 'Internacional',
+    'santos': 'Santos',
+    'sport': 'Sport',
+    'bahia': 'Bahia',
+    'fortaleza': 'Fortaleza',
+    'ceará': 'Ceará', 'ceara': 'Ceará',
+    'paysandu': 'Paysandu',
+    'cuiabá': 'Cuiabá', 'cuiaba': 'Cuiabá',
+    'bragantino': 'Bragantino',
+    'goiás': 'Goiás', 'goias': 'Goiás',
+    'juventude': 'Juventude',
+    'coritiba': 'Coritiba',
+    'athletico': 'Athletico-PR',
+    'avai': 'Avaí', 'avaí': 'Avaí',
+    'recife': 'Sport Recife',
+};
+
+const CLUBES_EXT: Record<string, string> = {
+    'real madrid': 'Real Madrid',
+    'barcelona': 'Barcelona',
+    'atletico madrid': 'Atlético Madrid', 'atlético madrid': 'Atlético Madrid',
+    'sevilla': 'Sevilla',
+    'valencia': 'Valencia',
+    'manchester city': 'Manchester City', 'man city': 'Manchester City',
+    'manchester united': 'Manchester United', 'man united': 'Manchester United',
+    'liverpool': 'Liverpool',
+    'arsenal': 'Arsenal',
+    'chelsea': 'Chelsea',
+    'tottenham': 'Tottenham',
+    'juventus': 'Juventus',
+    'milan': 'Milan',
+    'inter milan': 'Inter Milan', 'internazionale': 'Inter Milan',
+    'napoli': 'Napoli', 'naples': 'Napoli',
+    'roma': 'Roma',
+    'lazio': 'Lazio',
+    'psg': 'PSG', 'paris saint-germain': 'PSG', 'paris saint germain': 'PSG',
+    'lyon': 'Lyon',
+    'marseille': 'Marseille',
+    'ajax': 'Ajax',
+    'porto': 'Porto',
+    'benfica': 'Benfica',
+    'sporting': 'Sporting CP',
+    'dortmund': 'Borussia Dortmund', 'borussia dortmund': 'Borussia Dortmund',
+    'bayern': 'Bayern Munich', 'bayern munich': 'Bayern Munich', 'bayern munchen': 'Bayern Munich',
+    'bayer leverkusen': 'Bayer Leverkusen',
+    'celtic': 'Celtic',
+    'rangers': 'Rangers',
+    'betis': 'Real Betis', 'real betis': 'Real Betis',
+    'villarreal': 'Villarreal',
+    'sociedad': 'Real Sociedad', 'real sociedad': 'Real Sociedad',
+    'newcastle': 'Newcastle',
+    'west ham': 'West Ham',
+    'aston villa': 'Aston Villa',
+    'leicester': 'Leicester',
+    'fiorentina': 'Fiorentina',
+    'galatasaray': 'Galatasaray',
+    'fenerbahce': 'Fenerbahçe',
+    'boca juniors': 'Boca Juniors',
+    'river plate': 'River Plate',
+    'university of chile': 'Universidad de Chile',
+    'universidad de chile': 'Universidad de Chile',
+    'colo colo': 'Colo-Colo',
+    'club america': 'Club América', 'america': 'Club América',
+    'chivas': 'Chivas',
+    'tigres': 'Tigres',
+    'guadalajara': 'Guadalajara',
+};
+
+const SELECOES: Record<string, string> = {
+    'brazil': 'Brasil', 'brasil': 'Brasil',
+    'argentina': 'Argentina',
+    'portugal': 'Portugal',
+    'germany': 'Alemanha', 'deutschland': 'Alemanha',
+    'england': 'Inglaterra',
+    'italy': 'Itália', 'italia': 'Itália',
+    'spain': 'Espanha',
+    'france': 'França',
+    'netherlands': 'Holanda', 'holland': 'Holanda',
+    'colombia': 'Colômbia',
+    'mexico': 'México',
+    'japan': 'Japão',
+    'croatia': 'Croácia',
+    'uruguay': 'Uruguai',
+    'chile': 'Chile',
+    'belgium': 'Bélgica',
+    'denmark': 'Dinamarca',
+    'sweden': 'Suécia',
+    'poland': 'Polônia',
+    'australia': 'Austrália',
+    'nigeria': 'Nigéria',
+    'senegal': 'Senegal',
+    'morocco': 'Marrocos',
+    'cameroon': 'Camarões',
+    'korea': 'Coreia',
+    'ecuador': 'Equador',
+    'usa': 'EUA', 'united states': 'EUA',
+    'scotland': 'Escócia',
+    'wales': 'País de Gales',
+    'switzerland': 'Suíça',
+    'ghana': 'Gana',
+    'mali': 'Mali',
+    'costa rica': 'Costa Rica',
+    'paraguay': 'Paraguai',
+    'peru': 'Peru',
+    'venezuela': 'Venezuela',
+    'saudi': 'Arábia Saudita', 'saudi arabia': 'Arábia Saudita',
+    'iran': 'Irã',
+    'qatar': 'Qatar',
+    'austria': 'Áustria',
+    'serbia': 'Sérvia',
+    'turkey': 'Turquia',
+    'ukraine': 'Ucrânia',
+    'czech': 'República Tcheca',
+    'slovakia': 'Eslováquia',
+    'hungary': 'Hungria',
+    'romania': 'Romênia',
+    'greece': 'Grécia',
+    'norway': 'Noruega',
+    'finland': 'Finlândia',
+    'iceland': 'Islândia',
+    'albania': 'Albânia',
+    'ivory coast': 'Costa do Marfim', 'côte d\'ivoire': 'Costa do Marfim',
+    'egypt': 'Egito',
+    'south africa': 'África do Sul',
+    'canada': 'Canadá',
+    'jamaica': 'Jamaica',
+    'panama': 'Panamá',
+    'honduras': 'Honduras',
+};
+
+const NBA_TIMES: Record<string, string> = {
+    'lakers': 'Lakers', 'los angeles lakers': 'Lakers',
+    'celtics': 'Celtics', 'boston celtics': 'Celtics',
+    'warriors': 'Warriors', 'golden state': 'Warriors',
+    'bulls': 'Bulls', 'chicago bulls': 'Bulls',
+    'heat': 'Heat', 'miami heat': 'Heat',
+    'knicks': 'Knicks', 'new york knicks': 'Knicks',
+    'nets': 'Nets', 'brooklyn nets': 'Nets',
+    'clippers': 'Clippers',
+    'suns': 'Suns', 'phoenix suns': 'Suns',
+    'mavericks': 'Mavericks', 'dallas mavericks': 'Mavericks',
+    'nuggets': 'Nuggets', 'denver nuggets': 'Nuggets',
+    'bucks': 'Bucks', 'milwaukee bucks': 'Bucks',
+    'sixers': '76ers', 'philadelphia 76ers': '76ers',
+    'raptors': 'Raptors', 'toronto raptors': 'Raptors',
+    'hawks': 'Hawks', 'atlanta hawks': 'Hawks',
+    'jazz': 'Jazz', 'utah jazz': 'Jazz',
+    'spurs': 'Spurs', 'san antonio spurs': 'Spurs',
+    'thunder': 'Thunder', 'oklahoma city': 'Thunder',
+    'blazers': 'Trail Blazers', 'portland trail blazers': 'Trail Blazers',
+    'timberwolves': 'Timberwolves', 'minnesota': 'Timberwolves',
+    'grizzlies': 'Grizzlies', 'memphis grizzlies': 'Grizzlies',
+    'pelicans': 'Pelicans', 'new orleans pelicans': 'Pelicans',
+    'pacers': 'Pacers', 'indiana pacers': 'Pacers',
+    'magic': 'Magic', 'orlando magic': 'Magic',
+    'cavaliers': 'Cavaliers', 'cleveland cavaliers': 'Cavaliers',
+    'pistons': 'Pistons', 'detroit pistons': 'Pistons',
+    'wizards': 'Wizards', 'washington wizards': 'Wizards',
+    'kings': 'Kings', 'sacramento kings': 'Kings',
+    'rockets': 'Rockets', 'houston rockets': 'Rockets',
+    'hornets': 'Hornets', 'charlotte hornets': 'Hornets',
+};
+
+const F1_EQUIPES: Record<string, string> = {
+    'ferrari': 'Ferrari', 'red bull': 'Red Bull', 'mercedes': 'Mercedes',
+    'mclaren': 'McLaren', 'aston martin': 'Aston Martin', 'alpine': 'Alpine',
+    'williams': 'Williams', 'haas': 'Haas', 'alfa romeo': 'Alfa Romeo',
+    'alphatauri': 'AlphaTauri', 'sauber': 'Sauber', 'visa': 'Racing Bulls',
+    'racing bulls': 'Racing Bulls', 'rb ': 'Racing Bulls',
+};
+
+// Palavras de seleções nacionais para excluir de clubes estrangeiros
+const SELECAO_KEYWORDS = Object.keys(SELECOES);
+
+// ─── Função principal de tradução ───────────────────────────────────────────
+
+export const translateTitle = (rawTitle: string, category: string): string => {
+    const t = rawTitle.toLowerCase();
+    const cat = (category || '').toLowerCase();
+
+    // ── 1. Detectar temporada ──────────────────────────────────────────────
+    let temporada = '';
+    // Padrão "2025 26" ou "2025/26" ou "2026 27"
+    const twoYearMatch = t.match(/20(\d{2})[/ ](\d{2})/);
+    if (twoYearMatch) {
+        temporada = `${twoYearMatch[1]}/${twoYearMatch[2]}`;
+    } else {
+        // Padrão "2026" sozinho
+        const oneYearMatch = t.match(/\b(20\d{2})\b/);
+        if (oneYearMatch) {
+            temporada = oneYearMatch[1].slice(2); // "2026" → "26"
+        }
+    }
+
+    // ── 2. Detectar tipo de produto ───────────────────────────────────────
+    let tipo = '';
+    if (t.includes('polo')) {
+        tipo = 'Polo';
+    } else if (t.includes('corta-vento') || t.includes('corta vento') || t.includes('windbreaker') || t.includes('wind breaker') || (t.includes('vest') && !t.includes('harvest'))) {
+        tipo = 'Agasalho';
+    } else if (t.includes('agasalho')) {
+        tipo = 'Agasalho';
+    } else if (t.includes('goalkeeper') || t.includes('goleiro')) {
+        tipo = 'Goleiro';
+    } else if (t.includes('long-sleeved') || t.includes('long sleeve') || t.includes('manga longa')) {
+        if (t.includes('women') || t.includes('woman') || t.includes('womens')) {
+            tipo = 'Feminino Manga Longa';
+        } else if (t.includes('kids') || t.includes('infantil') || t.includes('sizes 16')) {
+            tipo = 'Infantil Manga Longa';
+        } else {
+            tipo = 'Manga Longa';
+        }
+    } else if (t.includes('women') || t.includes('woman') || t.includes('womens') || t.includes('feminino')) {
+        tipo = 'Feminino';
+    } else if (t.includes('kids') || t.includes('infantil') || t.includes('sizes 16') || cat === 'infantil') {
+        tipo = 'Infantil';
+    } else if (t.includes('short') && (t.includes('nba') || cat === 'nba')) {
+        tipo = 'Shorts NBA';
+    } else if (t.includes('short') || t.includes('pants')) {
+        tipo = 'Shorts';
+    } else if (t.includes('kit') && t.includes('short')) {
+        tipo = 'Kit Shorts';
+    } else if (t.includes('kit')) {
+        tipo = 'Kit';
+    } else if (t.includes('retro') || t.includes('retrô')) {
+        tipo = 'Retrô';
+    } else if (t.includes('player version') || t.includes('player edition') || t.includes('versão jogador')) {
+        tipo = 'Jogador';
+    } else if (t.includes('fan') || t.includes('torcedor')) {
+        tipo = 'Torcedor';
+    } else if (t.includes('training') || t.includes('treino')) {
+        tipo = 'Treino';
+    } else if (t.includes('meia') || t.includes('sock')) {
+        tipo = 'Meia';
+    } else if (t.includes('special edition') || t.includes('member') || t.includes('edição especial')) {
+        tipo = 'Edição Especial';
+    }
+
+    // ── 3. Detectar F1 ───────────────────────────────────────────────────
+    if (t.includes('f1') || t.includes('formula 1') || t.includes('formula one') || t.includes('fórmula 1')) {
+        let equipe = 'F1';
+        for (const [key, nome] of Object.entries(F1_EQUIPES)) {
+            if (t.includes(key)) { equipe = nome; break; }
+        }
+        // evitar duplicar "F1 F1"
+        return equipe === 'F1' ? `F1 ${temporada || ''}`.trim() : `${equipe} F1 ${temporada || ''}`.trim();
+    }
+
+    // ── 4. Detectar NBA ──────────────────────────────────────────────────
+    if (cat === 'nba' || t.includes('nba') || t.includes('basquete') || t.includes('basketball')) {
+        let time = 'NBA';
+        for (const [key, nome] of Object.entries(NBA_TIMES)) {
+            if (t.includes(key)) { time = nome; break; }
+        }
+        if (tipo === 'Shorts NBA') return `${time} Shorts`;
+        return `${time} Basquete`;
+    }
+
+    // ── 5. Detectar clube/seleção ─────────────────────────────────────────
+    let clube = '';
+
+    // Tentar clubes BR primeiro
+    for (const [key, nome] of Object.entries(CLUBES_BR)) {
+        if (t.includes(key)) { clube = nome; break; }
+    }
+
+    // Tentar seleções
+    if (!clube) {
+        for (const [key, nome] of Object.entries(SELECOES)) {
+            if (t.includes(key)) { clube = nome; break; }
+        }
+    }
+
+    // Tentar clubes estrangeiros (só se não for seleção)
+    if (!clube) {
+        for (const [key, nome] of Object.entries(CLUBES_EXT)) {
+            if (t.includes(key)) {
+                // Verificar que não é uma seleção nacional
+                const isSel = SELECAO_KEYWORDS.some(sk => t.includes(sk) && !t.includes('club') && !t.includes('fc'));
+                if (!isSel) { clube = nome; break; }
+            }
+        }
+    }
+
+    // Se não detectou clube, usar o título original limpo
+    if (!clube) {
+        // Tentar extrair nome próprio do início do título
+        const cleaned = rawTitle
+            .replace(/\b(20\d{2}[/ ]\d{2}|20\d{2})\b/g, '')
+            .replace(/\b(player version|player edition|fan version|women'?s?|womens|kids|retro|training|jersey|home|away|special edition|short|pants|polo|vest|windbreaker|goalkeeper|long-?sleeved?|S-X{0,4}L{1,2}|sizes? \d+-\d+|--+|-+)\b/gi, '')
+            .replace(/\s+/g, ' ').trim();
+        return cleaned || rawTitle;
+    }
+
+    // ── 6. Montar título final ────────────────────────────────────────────
+    const partes: string[] = [clube];
+    if (temporada) partes.push(temporada);
+    if (tipo) partes.push(tipo);
+    // Se não tem tipo, assume Torcedor para camisas comuns
+    if (!tipo && !temporada) partes.push('Torcedor');
+    if (!tipo && temporada) partes.push('Torcedor');
+
+    return partes.join(' ');
+};
+
+// ─── Preço ───────────────────────────────────────────────────────────────────
+
 const getPrice = (title: string, category: string): number => {
     const t = title.toLowerCase();
     const c = category.toLowerCase();
 
     if (t.includes('polo')) return 165;
-    if (t.includes('meia')) return 50;
-    if (t.includes('corta vento')) return 270;
+    if (t.includes('meia') || t.includes('sock')) return 50;
+    if (t.includes('corta vento') || t.includes('windbreaker') || t.includes('vest')) return 270;
     if (t.includes('retrô') || t.includes('retro')) return 190;
     if (t.includes('jogador') || t.includes('player')) return 190;
     if (t.includes('torcedor') || t.includes('fan')) return 150;
-    if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1')) return 240;
+    if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1') || t.includes('formula one')) return 240;
 
     if (t.includes('kit')) {
         if (t.includes('calça') || t.includes('calca')) {
@@ -51,14 +371,16 @@ const getPrice = (title: string, category: string): number => {
 
     if (t.includes('short') || t.includes('pants')) {
         if (c === 'nba' || t.includes('nba')) return 140;
-        return 95; // Futebol short / pants
+        return 95;
     }
 
     if (c === 'nba' || t.includes('basquete') || t.includes('basketball')) return 240;
     if (c === 'infantil' || t.includes('kids') || t.includes('infantil')) return 180;
 
-    return 150; // Versão torcedor default
+    return 150;
 };
+
+// ─── URL de imagem ───────────────────────────────────────────────────────────
 
 export const formatImageUrl = (productId: string, index: number, ext: string = '.jpg'): string => {
     if (IMAGE_BASE_URL) {
@@ -69,7 +391,8 @@ export const formatImageUrl = (productId: string, index: number, ext: string = '
     return `/${localPrefix}${productId}/${index}${ext}`;
 };
 
-// Map the raw JSON to our base Product interface
+// ─── Produtos base ───────────────────────────────────────────────────────────
+
 export const baseProducts: Product[] = (catalogData as any[])
     .filter((item: any) => item.images && item.images.length > 0)
     .map((item: any) => {
@@ -84,7 +407,7 @@ export const baseProducts: Product[] = (catalogData as any[])
 
         return {
             id: item.id,
-            name: item.title,
+            name: translateTitle(item.title, item.category || ''),
             price: getPrice(item.title, item.category || ''),
             category: item.category,
             image: images.length > 0 ? images[0] : '/placeholder.jpg',
@@ -97,7 +420,6 @@ export const baseProducts: Product[] = (catalogData as any[])
         };
     });
 
-// Provide a backward-compatible mock array for initial quick-renders
 export const products: Product[] = baseProducts;
 
 export const getProducts = async (includeHidden = false): Promise<Product[]> => {
@@ -125,7 +447,6 @@ export const getProducts = async (includeHidden = false): Promise<Product[]> => 
             return baseProduct;
         });
 
-        // Filter out hidden products unless explicitly requested (e.g. by Admin)
         return includeHidden ? merged : merged.filter(p => p.is_visible !== false);
     } catch (err) {
         console.error("Error fetching product overrides from Supabase", err);
@@ -134,7 +455,7 @@ export const getProducts = async (includeHidden = false): Promise<Product[]> => 
 };
 
 export const getProductById = async (id: string): Promise<Product | undefined> => {
-    const allProducts = await getProducts(true); // Include hidden in case admin is viewing
+    const allProducts = await getProducts(true);
     return allProducts.find(p => p.id === id);
 };
 

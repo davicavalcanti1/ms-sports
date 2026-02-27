@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { MessageCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatImageUrl } from '../data/products';
 import { VENDORS, buildVendorUrl } from '../lib/whatsapp';
 
@@ -55,6 +56,16 @@ const CATEGORY_BANNERS = [
 ];
 
 export default function Home() {
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/catalog?q=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
+
     return (
         <div className="space-y-0">
             {/* Hero Section */}
@@ -106,14 +117,23 @@ export default function Home() {
 
             {/* Search bar */}
             <div className="px-4 -mt-6 relative z-20 max-w-7xl mx-auto">
-                <label className="flex items-center bg-white/[0.03] backdrop-blur-xl rounded-xl px-4 py-3 gap-3 border border-primary/20 shadow-2xl">
-                    <span className="text-primary">🔍</span>
-                    <input
-                        className="bg-transparent border-none focus:ring-0 focus:outline-none text-white placeholder:text-gray-500 w-full text-sm"
-                        placeholder="Buscar camisas de futebol, basquete..."
-                        type="text"
-                    />
-                </label>
+                <form onSubmit={handleSearch}>
+                    <label className="flex items-center bg-white/[0.03] backdrop-blur-xl rounded-xl px-4 py-3 gap-3 border border-primary/20 shadow-2xl cursor-text">
+                        <span className="text-primary">🔍</span>
+                        <input
+                            className="bg-transparent border-none focus:ring-0 focus:outline-none text-white placeholder:text-gray-500 w-full text-sm"
+                            placeholder="Buscar times, camisas, basquete..."
+                            type="text"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button type="submit" className="text-primary text-xs font-bold uppercase tracking-widest hover:text-white transition-colors whitespace-nowrap">
+                                Buscar →
+                            </button>
+                        )}
+                    </label>
+                </form>
             </div>
 
             {/* Carrossel de categorias */}

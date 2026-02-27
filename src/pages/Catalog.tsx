@@ -5,59 +5,140 @@ import type { Product } from '../data/products';
 import { buildWhatsappUrl } from '../lib/whatsapp';
 import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight, MessageCircle } from 'lucide-react';
 
-type FilterGroup = "Todos" | "Camisas" | "Seleções" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
+// ─── Estrutura de filtros ────────────────────────────────────────────────────
 
-const SELECOES = [
-    "Brasil", "Argentina", "Portugal", "Alemanha", "Inglaterra",
-    "Itália", "Espanha", "França", "Holanda", "Colômbia",
-    "México", "Japão", "Croácia", "Uruguai", "Chile",
-    "Bélgica", "Dinamarca", "Suécia", "Polônia", "Austrália",
-    "Nigéria", "Senegal", "Marrocos", "Camarões", "Coreia",
-    "Equador", "EUA",
+type MainFilter =
+    | 'Todos' | 'Clubes Brasileiros' | 'Clubes Estrangeiros' | 'Seleções'
+    | 'NBA' | 'F1' | 'NFL' | 'Feminino' | 'Retrô' | 'Kids' | 'Shorts' | 'Agasalhos';
+
+const CLUBES_BR_LISTA = [
+    'Flamengo', 'Palmeiras', 'Corinthians', 'São Paulo', 'Fluminense',
+    'Vasco', 'Botafogo', 'Cruzeiro', 'Atlético-MG', 'Grêmio',
+    'Internacional', 'Santos', 'Bahia', 'Fortaleza', 'Ceará',
+    'Paysandu', 'Bragantino', 'Athletico-PR', 'Juventude', 'Coritiba',
+    'Cuiabá', 'Goiás',
 ];
 
-// Mapeia nome exibido → keywords para busca no título
-const SELECOES_KEYWORDS: Record<string, string[]> = {
-    "Brasil":     ["brasil", "brazil"],
-    "Argentina":  ["argentina"],
-    "Portugal":   ["portugal"],
-    "Alemanha":   ["germany", "german", "deutschland"],
-    "Inglaterra": ["england", "english"],
-    "Itália":     ["italia", "italy", "italian"],
-    "Espanha":    ["spain", "spanish", "espana"],
-    "França":     ["france", "french"],
-    "Holanda":    ["netherlands", "holland", "dutch"],
-    "Colômbia":   ["colombia"],
-    "México":     ["mexico"],
-    "Japão":      ["japan", "japanese"],
-    "Croácia":    ["croatia"],
-    "Uruguai":    ["uruguay"],
-    "Chile":      ["chile"],
-    "Bélgica":    ["belgium"],
-    "Dinamarca":  ["denmark"],
-    "Suécia":     ["sweden"],
-    "Polônia":    ["poland"],
-    "Austrália":  ["australia"],
-    "Nigéria":    ["nigeria"],
-    "Senegal":    ["senegal"],
-    "Marrocos":   ["morocco"],
-    "Camarões":   ["cameroon"],
-    "Coreia":     ["korea"],
-    "Equador":    ["ecuador"],
-    "EUA":        [" usa ", "united states", "u.s.a"],
+const CLUBES_BR_KEYWORDS: Record<string, string[]> = {
+    'Flamengo':      ['flamengo'],
+    'Palmeiras':     ['palmeiras'],
+    'Corinthians':   ['corinthians'],
+    'São Paulo':     ['são paulo', 'sao paulo'],
+    'Fluminense':    ['fluminense'],
+    'Vasco':         ['vasco'],
+    'Botafogo':      ['botafogo'],
+    'Cruzeiro':      ['cruzeiro'],
+    'Atlético-MG':   ['atlético-mg', 'atletico mineiro', 'atlético mineiro'],
+    'Grêmio':        ['grêmio', 'gremio'],
+    'Internacional': ['internacional'],
+    'Santos':        ['santos'],
+    'Bahia':         ['bahia'],
+    'Fortaleza':     ['fortaleza'],
+    'Ceará':         ['ceará', 'ceara'],
+    'Paysandu':      ['paysandu'],
+    'Bragantino':    ['bragantino'],
+    'Athletico-PR':  ['athletico'],
+    'Juventude':     ['juventude'],
+    'Coritiba':      ['coritiba'],
+    'Cuiabá':        ['cuiabá', 'cuiaba'],
+    'Goiás':         ['goiás', 'goias'],
 };
 
-const filterGroups: Record<Exclude<FilterGroup, "Todos" | "Seleções">, string[]> = {
-    "Camisas":    ["Versão Jogador", "Versão Torcedor", "Retrô"],
-    "Basquete":   ["Camisa Basquete", "Short NBA"],
-    "F1":         ["Camisa de Formula 1"],
-    "Kits":       ["Kit Calça e Regata", "Kit Short e Regata", "Kit Calça e Camisa"],
-    "Shorts":     ["Short de Futebol", "Short NBA"],
-    "Feminino":   [],
-    "Infantil":   ["Conjunto Kids"],
-    "Acessórios": ["Meia"],
-    "Polo":       [],
+const PAISES_EXT_LISTA = [
+    'Espanha', 'Inglaterra', 'Itália', 'França', 'Alemanha',
+    'Portugal', 'Holanda', 'Argentina (Clubes)', 'Brasil (Clubes Ext.)',
+    'Escócia', 'Turquia', 'Outros',
+];
+
+const PAISES_EXT_KEYWORDS: Record<string, string[]> = {
+    'Espanha':             ['real madrid', 'barcelona', 'atletico madrid', 'sevilla', 'valencia', 'real betis', 'villarreal', 'real sociedad'],
+    'Inglaterra':          ['manchester city', 'manchester united', 'liverpool', 'arsenal', 'chelsea', 'tottenham', 'newcastle', 'west ham', 'aston villa', 'leicester'],
+    'Itália':              ['juventus', 'milan', 'inter milan', 'internazionale', 'napoli', 'naples', 'roma', 'lazio', 'fiorentina'],
+    'França':              ['psg', 'paris saint', 'lyon', 'marseille'],
+    'Alemanha':            ['dortmund', 'borussia dortmund', 'bayern', 'bayer leverkusen'],
+    'Portugal':            ['porto', 'benfica', 'sporting'],
+    'Holanda':             ['ajax'],
+    'Argentina (Clubes)':  ['boca juniors', 'river plate'],
+    'Brasil (Clubes Ext.)':['flamengo', 'palmeiras'], // não deve aparecer aqui, só safety
+    'Escócia':             ['celtic', 'rangers'],
+    'Turquia':             ['galatasaray', 'fenerbahce'],
+    'Outros':              ['colo colo', 'universidad de chile', 'club america', 'chivas', 'tigres'],
 };
+
+// Palavras de SELEÇÕES nacionais — para excluir dos filtros de clubes estrangeiros
+const SELECOES_EXCLUIR = [
+    'england home', 'england away', 'england jersey',
+    'spain home', 'spain away', 'spain jersey',
+    'germany home', 'germany away', 'germany jersey',
+    'italy home', 'italy away', 'italy jersey',
+    'france home', 'france away', 'france jersey',
+    'portugal home', 'portugal away', 'portugal jersey',
+    'netherlands home', 'netherlands away',
+];
+
+const SELECOES_LISTA = [
+    'Brasil', 'Argentina', 'Portugal', 'Alemanha', 'Inglaterra',
+    'Itália', 'Espanha', 'França', 'Holanda', 'Colômbia',
+    'México', 'Japão', 'Croácia', 'Uruguai', 'Chile',
+    'Bélgica', 'Dinamarca', 'Suécia', 'Polônia', 'Austrália',
+    'Nigéria', 'Senegal', 'Marrocos', 'Camarões', 'Coreia',
+    'Equador', 'EUA', 'Escócia', 'País de Gales', 'Suíça',
+    'Gana', 'Mali', 'Costa Rica', 'Paraguai', 'Peru',
+];
+
+const SELECOES_KEYWORDS: Record<string, string[]> = {
+    'Brasil':         ['brasil', 'brazil'],
+    'Argentina':      ['argentina'],
+    'Portugal':       ['portugal'],
+    'Alemanha':       ['germany', 'deutsch'],
+    'Inglaterra':     ['england'],
+    'Itália':         ['italy', 'italia'],
+    'Espanha':        ['spain'],
+    'França':         ['france'],
+    'Holanda':        ['netherlands', 'holland'],
+    'Colômbia':       ['colombia'],
+    'México':         ['mexico'],
+    'Japão':          ['japan'],
+    'Croácia':        ['croatia'],
+    'Uruguai':        ['uruguay'],
+    'Chile':          ['chile'],
+    'Bélgica':        ['belgium'],
+    'Dinamarca':      ['denmark'],
+    'Suécia':         ['sweden'],
+    'Polônia':        ['poland'],
+    'Austrália':      ['australia'],
+    'Nigéria':        ['nigeria'],
+    'Senegal':        ['senegal'],
+    'Marrocos':       ['morocco'],
+    'Camarões':       ['cameroon'],
+    'Coreia':         ['korea'],
+    'Equador':        ['ecuador'],
+    'EUA':            ['usa', 'united states'],
+    'Escócia':        ['scotland'],
+    'País de Gales':  ['wales'],
+    'Suíça':          ['switzerland', 'swiss'],
+    'Gana':           ['ghana'],
+    'Mali':           ['mali'],
+    'Costa Rica':     ['costa rica'],
+    'Paraguai':       ['paraguay'],
+    'Peru':           ['peru'],
+};
+
+// Keywords de clubes BR para excluir de seleções
+const CLUBES_BR_EXCLUIR = [
+    'flamengo', 'palmeiras', 'corinthians', 'fluminense', 'vasco',
+    'botafogo', 'cruzeiro', 'atletico mineiro', 'gremio', 'internacional',
+    'paysandu', 'athletico', 'bragantino',
+];
+
+const TIPO_SUB = ['Torcedor', 'Jogador', 'Manga Longa'];
+
+const MAIN_FILTERS: MainFilter[] = [
+    'Todos', 'Clubes Brasileiros', 'Clubes Estrangeiros', 'Seleções',
+    'NBA', 'F1', 'NFL', 'Feminino', 'Retrô', 'Kids', 'Shorts', 'Agasalhos',
+];
+
+// ─── Componente ──────────────────────────────────────────────────────────────
 
 export default function Catalog() {
     const navigate = useNavigate();
@@ -66,32 +147,29 @@ export default function Catalog() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedGroup, setSelectedGroup] = useState<FilterGroup>('Todos');
-    const [selectedSub, setSelectedSub] = useState<string>('');
+    const [mainFilter, setMainFilter] = useState<MainFilter>('Todos');
+    const [subFilter, setSubFilter] = useState('');   // clube, país, seleção ou tipo
+    const [tipoFilter, setTipoFilter] = useState(''); // Torcedor / Jogador / Manga Longa
     const [displayCount, setDisplayCount] = useState(12);
-    const PRODUCTS_PER_PAGE = 12;
+    const PER_PAGE = 12;
 
-    // Lê parâmetros da URL ao montar (ex: /catalog?group=Basquete ou ?group=Seleções&sub=Brasil)
+    // Ler params da URL na montagem
     useEffect(() => {
-        const group = searchParams.get('group') as FilterGroup | null;
-        const sub = searchParams.get('sub') || '';
-        if (group) {
-            setSelectedGroup(group);
-            setSelectedSub(sub);
-        }
+        const group = searchParams.get('group') as MainFilter | null;
+        const sub   = searchParams.get('sub') || '';
+        const q     = searchParams.get('q') || '';
+        if (group) { setMainFilter(group); setSubFilter(sub); }
+        if (q) setSearchQuery(q);
     }, [searchParams]);
 
-    useEffect(() => {
-        loadData();
-    }, []);
+    useEffect(() => { loadData(); }, []);
 
     const loadData = async () => {
         try {
             setLoading(true);
-            const allProducts = await getProducts();
-            setProducts(allProducts);
-        } catch (error) {
-            console.error('Error loading products:', error);
+            setProducts(await getProducts());
+        } catch (e) {
+            console.error(e);
         } finally {
             setLoading(false);
         }
@@ -99,73 +177,121 @@ export default function Catalog() {
 
     const handleBuyNow = (e: React.MouseEvent, product: Product) => {
         e.preventDefault();
-        const message = `Olá! Tenho interesse em comprar:\n\n*${product.name}*\nPreço: R$ ${product.price.toFixed(2).replace('.', ',')}\n\nPoderia me ajudar?`;
-        window.open(buildWhatsappUrl(message), '_blank');
+        const msg = `Olá! Tenho interesse em:\n\n*${product.name}*\nPreço: R$ ${product.price.toFixed(2).replace('.', ',')}\n\nPoderia me ajudar?`;
+        window.open(buildWhatsappUrl(msg), '_blank');
     };
 
-    const handleGroupClick = (group: FilterGroup) => {
-        if (selectedGroup === group) {
-            setSelectedGroup('Todos');
-            setSelectedSub('');
-        } else {
-            setSelectedGroup(group);
-            setSelectedSub('');
-        }
-        setDisplayCount(PRODUCTS_PER_PAGE);
+    const selectMain = (f: MainFilter) => {
+        setMainFilter(prev => prev === f ? 'Todos' : f);
+        setSubFilter('');
+        setTipoFilter('');
+        setDisplayCount(PER_PAGE);
     };
 
-    const handleSubClick = (sub: string) => {
-        setSelectedSub(prev => prev === sub ? '' : sub);
-        setDisplayCount(PRODUCTS_PER_PAGE);
+    const selectSub = (s: string) => {
+        setSubFilter(prev => prev === s ? '' : s);
+        setTipoFilter('');
+        setDisplayCount(PER_PAGE);
     };
 
-    const handleLoadMore = () => setDisplayCount(prev => prev + PRODUCTS_PER_PAGE);
+    const selectTipo = (t: string) => {
+        setTipoFilter(prev => prev === t ? '' : t);
+        setDisplayCount(PER_PAGE);
+    };
 
-    // Lógica de filtro
+    // ─── Lógica de filtro ────────────────────────────────────────────────────
     const filteredProducts = products.filter(product => {
-        const titleLower = product.name.toLowerCase();
-        const catLower = product.category.toLowerCase();
+        const name = product.name.toLowerCase();
+        const desc = (product.description || '').toLowerCase();
+        const combined = name + ' ' + desc;
+        const cat  = (product.category || '').toLowerCase();
 
-        if (searchQuery && !titleLower.includes(searchQuery.toLowerCase())) return false;
+        // busca textual
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            if (!name.includes(q) && !desc.includes(q) && !cat.includes(q)) return false;
+        }
 
-        if (selectedGroup === 'Todos') return true;
+        if (mainFilter === 'Todos') return true;
 
-        if (selectedGroup === 'Seleções') {
-            if (selectedSub) {
-                const keywords = SELECOES_KEYWORDS[selectedSub] || [selectedSub.toLowerCase()];
-                return keywords.some(k => titleLower.includes(k));
+        // ── tipo (sub-sub) se aplicável ──
+        const matchesTipo = () => {
+            if (!tipoFilter) return true;
+            if (tipoFilter === 'Jogador')      return name.includes('jogador');
+            if (tipoFilter === 'Torcedor')     return name.includes('torcedor');
+            if (tipoFilter === 'Manga Longa')  return name.includes('manga longa');
+            return true;
+        };
+
+        if (mainFilter === 'Clubes Brasileiros') {
+            // excluir seleções
+            const isSel = Object.values(SELECOES_KEYWORDS).flat().some(k =>
+                combined.includes(k) && !CLUBES_BR_EXCLUIR.some(c => combined.includes(c))
+            );
+            if (isSel) return false;
+            if (subFilter) {
+                const kws = CLUBES_BR_KEYWORDS[subFilter] || [subFilter.toLowerCase()];
+                if (!kws.some(k => combined.includes(k))) return false;
+            } else {
+                const anyBR = Object.values(CLUBES_BR_KEYWORDS).flat().some(k => combined.includes(k));
+                if (!anyBR) return false;
             }
-            // Sem sub selecionado: mostra TODOS os produtos de seleção
-            const allKeywords = Object.values(SELECOES_KEYWORDS).flat();
-            return allKeywords.some(k => titleLower.includes(k)) || catLower === 'seleções';
+            return matchesTipo();
         }
 
-        if (selectedSub) {
-            return titleLower.includes(selectedSub.toLowerCase());
+        if (mainFilter === 'Clubes Estrangeiros') {
+            // excluir seleções nacionais — detectar pelo nome traduzido
+            const isSel = SELECOES_EXCLUIR.some(k => combined.includes(k));
+            if (isSel) return false;
+            // excluir clubes BR
+            if (CLUBES_BR_EXCLUIR.some(k => combined.includes(k))) return false;
+            if (subFilter) {
+                const kws = PAISES_EXT_KEYWORDS[subFilter] || [subFilter.toLowerCase()];
+                if (!kws.some(k => combined.includes(k))) return false;
+            } else {
+                const anyExt = Object.values(PAISES_EXT_KEYWORDS).flat().some(k => combined.includes(k));
+                if (!anyExt) return false;
+            }
+            return matchesTipo();
         }
 
-        if (selectedGroup === 'Feminino')   return titleLower.includes('feminino') || titleLower.includes('women') || titleLower.includes('woman');
-        if (selectedGroup === 'Infantil')   return titleLower.includes('kid') || titleLower.includes('infantil') || catLower === 'infantil';
-        if (selectedGroup === 'Basquete')   return titleLower.includes('basquete') || titleLower.includes('basketball') || catLower === 'nba';
-        if (selectedGroup === 'F1')         return titleLower.includes('f1') || titleLower.includes('formula 1') || titleLower.includes('fórmula 1');
-        if (selectedGroup === 'Kits')       return titleLower.includes('kit');
-        if (selectedGroup === 'Shorts')     return titleLower.includes('short');
-        if (selectedGroup === 'Acessórios') return titleLower.includes('meia');
-        if (selectedGroup === 'Polo')       return titleLower.includes('polo');
-        if (selectedGroup === 'Camisas')    return titleLower.includes('jogador') || titleLower.includes('player') ||
-                                                   titleLower.includes('torcedor') || titleLower.includes('fan') ||
-                                                   titleLower.includes('retrô') || titleLower.includes('retro');
+        if (mainFilter === 'Seleções') {
+            // excluir clubes BR e estrangeiros conhecidos
+            if (CLUBES_BR_EXCLUIR.some(k => combined.includes(k))) return false;
+            const isClubExt = ['real madrid','barcelona','manchester','liverpool','arsenal','chelsea','tottenham',
+                'juventus','milan','napoli','psg','dortmund','ajax','porto','benfica'].some(k => combined.includes(k));
+            if (isClubExt) return false;
+            if (subFilter) {
+                const kws = SELECOES_KEYWORDS[subFilter] || [subFilter.toLowerCase()];
+                return kws.some(k => combined.includes(k));
+            }
+            return Object.values(SELECOES_KEYWORDS).flat().some(k => combined.includes(k)) || cat === 'seleções';
+        }
+
+        if (mainFilter === 'NBA')      return cat === 'nba' || name.includes('basquete') || combined.includes('nba');
+        if (mainFilter === 'F1')       return name.includes('f1') || combined.includes('formula 1') || combined.includes('formula one');
+        if (mainFilter === 'NFL')      return combined.includes('nfl') || combined.includes('american football');
+        if (mainFilter === 'Feminino') return name.includes('feminino');
+        if (mainFilter === 'Retrô')    return name.includes('retrô');
+        if (mainFilter === 'Kids')     return name.includes('infantil');
+        if (mainFilter === 'Shorts')   return name.includes('shorts');
+        if (mainFilter === 'Agasalhos') return name.includes('agasalho') || combined.includes('windbreaker') || combined.includes('vest');
 
         return true;
     });
 
     const visibleProducts = filteredProducts.slice(0, displayCount);
-    const hasMore = visibleProducts.length < filteredProducts.length;
+    const hasMore = filteredProducts.length > displayCount;
 
-    const allGroups: FilterGroup[] = ['Todos', 'Camisas', 'Seleções', ...Object.keys(filterGroups) as Exclude<FilterGroup, "Todos" | "Seleções" | "Camisas">[]];
+    // Decidir quais sub-filtros mostrar
+    const showClubeBRSubs  = mainFilter === 'Clubes Brasileiros';
+    const showPaisExtSubs  = mainFilter === 'Clubes Estrangeiros';
+    const showSelecoesSubs = mainFilter === 'Seleções';
+    const showTipoSubs     = (mainFilter === 'Clubes Brasileiros' || mainFilter === 'Clubes Estrangeiros' || mainFilter === 'Seleções');
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
+            {/* Header */}
             <div className="mb-8 border-b border-white/10 pb-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
                     <h1 className="text-4xl font-bold tracking-tighter">Coleção</h1>
@@ -175,87 +301,143 @@ export default function Catalog() {
                             type="text"
                             placeholder="Pesquisar por time, cor, etc..."
                             value={searchQuery}
-                            onChange={(e) => { setSearchQuery(e.target.value); setDisplayCount(PRODUCTS_PER_PAGE); }}
+                            onChange={(e) => { setSearchQuery(e.target.value); setDisplayCount(PER_PAGE); }}
                             className="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary w-full transition-all"
                         />
                     </div>
                 </div>
 
-                {/* Grupos principais */}
-                <div className="flex items-center gap-2 text-gray-400 whitespace-nowrap mb-4">
-                    <Filter className="w-5 h-5" />
+                {/* Filtros principais */}
+                <div className="flex items-center gap-2 text-gray-400 mb-3">
+                    <Filter className="w-4 h-4" />
                     <span className="text-sm font-medium">Categorias:</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    {allGroups.map(group => (
+                    {MAIN_FILTERS.map(f => (
                         <button
-                            key={group}
-                            onClick={() => handleGroupClick(group)}
+                            key={f}
+                            onClick={() => selectMain(f)}
                             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1 ${
-                                selectedGroup === group
+                                mainFilter === f
                                     ? 'bg-primary text-secondary scale-105 shadow-lg'
                                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
                             }`}
                         >
-                            {group}
-                            {group !== 'Todos' && group !== 'Feminino' && group !== 'Infantil' && group !== 'Polo' && (
-                                selectedGroup === group
-                                    ? <ChevronDown className="w-4 h-4" />
-                                    : <ChevronRight className="w-4 h-4 opacity-50" />
+                            {f}
+                            {['Clubes Brasileiros','Clubes Estrangeiros','Seleções','NBA','Shorts'].includes(f) && (
+                                mainFilter === f
+                                    ? <ChevronDown className="w-3.5 h-3.5" />
+                                    : <ChevronRight className="w-3.5 h-3.5 opacity-40" />
                             )}
                         </button>
                     ))}
                 </div>
 
+                {/* Sub-filtros: Clubes Brasileiros */}
+                {showClubeBRSubs && (
+                    <div className="mt-4 pt-4 border-t border-white/5">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Clube</p>
+                        <div className="flex flex-wrap gap-2">
+                            {CLUBES_BR_LISTA.map(clube => (
+                                <button key={clube} onClick={() => selectSub(clube)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                        subFilter === clube ? 'bg-white text-secondary' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                    }`}>
+                                    {clube}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Sub-filtros: Clubes Estrangeiros */}
+                {showPaisExtSubs && (
+                    <div className="mt-4 pt-4 border-t border-white/5">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">País</p>
+                        <div className="flex flex-wrap gap-2">
+                            {PAISES_EXT_LISTA.map(pais => (
+                                <button key={pais} onClick={() => selectSub(pais)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                        subFilter === pais ? 'bg-white text-secondary' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                    }`}>
+                                    {pais}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Sub-filtros: Seleções */}
-                {selectedGroup === 'Seleções' && (
-                    <div className="mt-4 pt-4 border-t border-white/5 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                        {SELECOES.map(pais => (
-                            <button
-                                key={pais}
-                                onClick={() => handleSubClick(pais)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                    selectedSub === pais
-                                        ? 'bg-white text-secondary'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-                                }`}
-                            >
-                                {pais}
+                {showSelecoesSubs && (
+                    <div className="mt-4 pt-4 border-t border-white/5">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Seleção</p>
+                        <div className="flex flex-wrap gap-2">
+                            {SELECOES_LISTA.map(s => (
+                                <button key={s} onClick={() => selectSub(s)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                        subFilter === s ? 'bg-white text-secondary' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                    }`}>
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Sub-sub-filtro: Tipo (Torcedor / Jogador / Manga Longa) */}
+                {showTipoSubs && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        {TIPO_SUB.map(t => (
+                            <button key={t} onClick={() => selectTipo(t)}
+                                className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
+                                    tipoFilter === t ? 'bg-primary text-secondary' : 'bg-white/5 text-gray-500 hover:bg-white/10 hover:text-gray-300 border border-white/5'
+                                }`}>
+                                {t}
                             </button>
                         ))}
                     </div>
                 )}
 
-                {/* Sub-filtros: outros grupos */}
-                {selectedGroup !== 'Todos' && selectedGroup !== 'Seleções' &&
-                 selectedGroup !== 'Feminino' && selectedGroup !== 'Infantil' && selectedGroup !== 'Polo' &&
-                 filterGroups[selectedGroup as keyof typeof filterGroups]?.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-white/5 flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                        {filterGroups[selectedGroup as keyof typeof filterGroups].map(sub => (
-                            <button
-                                key={sub}
-                                onClick={() => handleSubClick(sub)}
+                {/* NBA sub-filtros */}
+                {mainFilter === 'NBA' && (
+                    <div className="mt-4 pt-4 border-t border-white/5 flex gap-2">
+                        {['Camisas', 'Shorts'].map(s => (
+                            <button key={s} onClick={() => selectSub(s)}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                    selectedSub === sub
-                                        ? 'bg-white text-secondary'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-                                }`}
-                            >
-                                {sub}
+                                    subFilter === s ? 'bg-white text-secondary' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                }`}>
+                                {s}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {/* Shorts sub-filtros */}
+                {mainFilter === 'Shorts' && (
+                    <div className="mt-4 pt-4 border-t border-white/5 flex gap-2">
+                        {['Futebol', 'NBA'].map(s => (
+                            <button key={s} onClick={() => selectSub(s)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                    subFilter === s ? 'bg-white text-secondary' : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                }`}>
+                                {s}
                             </button>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Resultado */}
+            {/* Contagem */}
             {!loading && (
                 <p className="text-xs text-gray-500 mb-4">
                     {filteredProducts.length} produto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}
-                    {selectedGroup !== 'Todos' && <span className="text-primary font-bold"> · {selectedGroup}{selectedSub ? ` › ${selectedSub}` : ''}</span>}
+                    {mainFilter !== 'Todos' && (
+                        <span className="text-primary font-bold"> · {mainFilter}{subFilter ? ` › ${subFilter}` : ''}{tipoFilter ? ` › ${tipoFilter}` : ''}</span>
+                    )}
                 </p>
             )}
 
+            {/* Grid de produtos */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                 {visibleProducts.map((product) => (
                     <Link key={product.id} to={`/product/${product.id}`} className="group">
@@ -272,9 +454,9 @@ export default function Catalog() {
                             </div>
 
                             {product.stock_status && product.stock_status !== 'in_stock' && (
-                                <div className={`absolute top-4 left-4 px-2 py-1 rounded text-xs font-bold uppercase ${
+                                <div className={`absolute top-4 left-4 px-2 py-1 rounded text-xs font-bold uppercase backdrop-blur-sm ${
                                     product.stock_status === 'made_to_order' ? 'bg-blue-500/80 text-white' : 'bg-red-500/80 text-white'
-                                } backdrop-blur-sm`}>
+                                }`}>
                                     {product.stock_status === 'made_to_order' ? 'Sob Encomenda' : 'Sem Estoque'}
                                 </div>
                             )}
@@ -295,8 +477,8 @@ export default function Catalog() {
                                 </button>
                             </div>
                         </div>
-                        <h3 className="text-sm sm:text-lg font-bold group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-1">{product.name}</h3>
-                        <p className="text-gray-400 text-xs sm:text-sm">{product.category}</p>
+                        <h3 className="text-sm sm:text-base font-bold group-hover:text-primary transition-colors line-clamp-2">{product.name}</h3>
+                        <p className="text-gray-400 text-xs">{product.category}</p>
                         <p className="text-primary font-bold mt-1 text-sm sm:text-base">
                             {product.price > 0 ? `R$ ${product.price.toFixed(2)}` : 'Preço sob consulta'}
                         </p>
@@ -312,10 +494,8 @@ export default function Catalog() {
 
             {!loading && hasMore && (
                 <div className="flex justify-center mt-12">
-                    <button
-                        onClick={handleLoadMore}
-                        className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-lg transition-colors border border-white/10"
-                    >
+                    <button onClick={() => setDisplayCount(c => c + PER_PAGE)}
+                        className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-lg transition-colors border border-white/10">
                         Carregar mais
                     </button>
                 </div>
