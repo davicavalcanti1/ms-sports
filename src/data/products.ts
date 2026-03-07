@@ -360,6 +360,7 @@ const getPrice = (title: string, category: string): number => {
     if (t.includes('jogador') || t.includes('player')) return 190;
     if (t.includes('torcedor') || t.includes('fan')) return 150;
     if (t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1') || t.includes('formula one')) return 240;
+    if (t.includes('nfl')) return 240;
 
     if (t.includes('kit')) {
         if (t.includes('calça') || t.includes('calca')) {
