@@ -1,13 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getProducts } from '../data/products';
 import type { Product } from '../data/products';
 import { supabase } from '../lib/supabase';
+
+// Categories available in the store
+const STORE_CATEGORIES = [
+    'Futebol',
+    'Feminino',
+    'Infantil',
+    'NBA',
+    'F1',
+    'Polo',
+    'Shorts',
+    'Kits',
+    'Acessórios',
+];
+
+interface NewProductForm {
+    title: string;
+    category: string;
+    customCategory: string;
+    price: number;
+    files: File[];
+    previews: string[];
+}
+
+const EMPTY_NEW_FORM: NewProductForm = {
+    title: '',
+    category: STORE_CATEGORIES[0],
+    customCategory: '',
+    price: 150,
+    files: [],
+    previews: [],
+};
 
 export default function Admin() {
     const [productsList, setProductsList] = useState<Product[]>([]);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editForm, setEditForm] = useState<Partial<Product>>({});
     const [loading, setLoading] = useState(false);
+
+    // New product creation
+    const [showNewForm, setShowNewForm] = useState(false);
+    const [newForm, setNewForm] = useState<NewProductForm>(EMPTY_NEW_FORM);
+    const [creating, setCreating] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const loadProducts = () => {
         getProducts(true).then(setProductsList);
@@ -17,6 +54,7 @@ export default function Admin() {
         loadProducts();
     }, []);
 
+    // ── Existing product editing ──────────────────────────────────────────
     const handleEditClick = (product: Product) => {
         setEditingId(product.id);
         setEditForm({ ...product });
@@ -56,12 +94,12 @@ export default function Admin() {
         }
     };
 
+    // ── Bulk price updates ────────────────────────────────────────────────
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [bulkPrice, setBulkPrice] = useState<number>(150);
     const [bulkLoading, setBulkLoading] = useState(false);
     const [filterCategory, setFilterCategory] = useState<string>('all');
 
-    // Free-input prices per core category
     const [catPrices, setCatPrices] = useState<Record<string, number>>({
         Futebol: 150,
         Feminino: 150,
@@ -71,7 +109,6 @@ export default function Admin() {
 
     const categories = Array.from(new Set(productsList.map(p => p.category))).sort();
 
-    // Core categories requested by user
     const coreCategories = [
         { id: 'all', label: 'Todos' },
         { id: 'Futebol', label: 'Masculina (Futebol)' },
@@ -99,11 +136,9 @@ export default function Admin() {
                 return;
             }
 
-            // Test with just the first product and show full error detail
             const first = productsInCategory[0];
             console.log('[BulkUpdate] Testing with first product:', first.id, '| target price:', targetPrice);
 
-            // Try update first on the first product
             const { data: testUpdate, error: testUpdateError } = await supabase
                 .from('products_new')
                 .update({ base_price: targetPrice })
@@ -117,7 +152,6 @@ export default function Admin() {
                 return;
             }
 
-            // No existing row — try insert
             if (!testUpdate || testUpdate.length === 0) {
                 console.log('[BulkUpdate] No rows updated, trying insert for:', first.id);
                 const { error: testInsertError } = await supabase
@@ -138,8 +172,7 @@ export default function Admin() {
                 }
             }
 
-            // First product worked — now run the rest
-            let successCount = 1; // Counted the first product
+            let successCount = 1;
             let errorCount = 0;
             const errors: string[] = [];
 
@@ -190,6 +223,90 @@ export default function Admin() {
         } finally {
             setBulkLoading(false);
         }
+    };
+
+    // ── New product creation ──────────────────────────────────────────────
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selected = Array.from(e.target.files || []);
+        if (selected.length === 0) return;
+
+        // Revoke old previews to avoid memory leaks
+        newForm.previews.forEach(url => URL.revokeObjectURL(url));
+
+        const previews = selected.map(f => URL.createObjectURL(f));
+        setNewForm(prev => ({ ...prev, files: selected, previews }));
+    };
+
+    const handleRemoveImage = (index: number) => {
+        URL.revokeObjectURL(newForm.previews[index]);
+        setNewForm(prev => ({
+            ...prev,
+            files: prev.files.filter((_, i) => i !== index),
+            previews: prev.previews.filter((_, i) => i !== index),
+        }));
+    };
+
+    const handleCreateProduct = async () => {
+        const title = newForm.title.trim();
+        const category = newForm.category === 'Outra' ? newForm.customCategory.trim() : newForm.category;
+
+        if (!title) { alert('Informe o nome do produto.'); return; }
+        if (!category) { alert('Informe a categoria.'); return; }
+        if (newForm.price <= 0) { alert('Informe um preço válido.'); return; }
+        if (newForm.files.length === 0) { alert('Adicione ao menos uma foto.'); return; }
+
+        setCreating(true);
+        try {
+            const productId = `custom-${Date.now()}`;
+            const imageUrls: string[] = [];
+
+            for (let i = 0; i < newForm.files.length; i++) {
+                const file = newForm.files[i];
+                const ext = file.name.split('.').pop() || 'jpg';
+                const path = `${productId}/${i + 1}.${ext}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('product-images')
+                    .upload(path, file, { upsert: true });
+
+                if (uploadError) throw new Error(`Upload da imagem ${i + 1} falhou: ${uploadError.message}`);
+
+                const { data: urlData } = supabase.storage
+                    .from('product-images')
+                    .getPublicUrl(path);
+
+                imageUrls.push(urlData.publicUrl);
+            }
+
+            const { error: insertError } = await supabase.from('products_new').insert({
+                id: productId,
+                title,
+                category,
+                base_price: newForm.price,
+                images: imageUrls,
+                is_visible: true,
+            });
+
+            if (insertError) throw new Error(insertError.message);
+
+            // Clean up previews and reset form
+            newForm.previews.forEach(url => URL.revokeObjectURL(url));
+            setNewForm(EMPTY_NEW_FORM);
+            setShowNewForm(false);
+            loadProducts();
+            alert(`✅ Produto "${title}" criado com sucesso!`);
+        } catch (err) {
+            console.error('[CreateProduct] Error:', err);
+            alert(`Erro ao criar produto: ${String(err)}`);
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const handleCancelNew = () => {
+        newForm.previews.forEach(url => URL.revokeObjectURL(url));
+        setNewForm(EMPTY_NEW_FORM);
+        setShowNewForm(false);
     };
 
     const filteredProducts = productsList.filter(p => {
@@ -309,7 +426,15 @@ export default function Admin() {
                 </div>
 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
-                    <h3 className="text-white font-bold text-sm uppercase tracking-widest shrink-0">Catálogo ({filteredProducts.length})</h3>
+                    <div className="flex items-center gap-3">
+                        <h3 className="text-white font-bold text-sm uppercase tracking-widest shrink-0">Catálogo ({filteredProducts.length})</h3>
+                        <button
+                            onClick={() => setShowNewForm(v => !v)}
+                            className="bg-primary hover:bg-primary-hover text-black text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                        >
+                            + Novo Produto
+                        </button>
+                    </div>
 
                     {/* Bulk Edit Controls Custom */}
                     <div className="flex flex-wrap items-center gap-2 bg-[#1a1a1a] border border-primary/20 rounded-lg p-2">
@@ -343,16 +468,145 @@ export default function Admin() {
                         </button>
                     </div>
                 </div>
+
+                {/* ── New Product Form ─────────────────────────────────────── */}
+                {showNewForm && (
+                    <div className="bg-[#1a1a1a] border border-primary/40 rounded-xl p-5 mb-6">
+                        <h4 className="text-primary font-bold text-sm uppercase tracking-widest mb-4">Cadastrar Novo Produto</h4>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            {/* Nome */}
+                            <div className="flex flex-col gap-1">
+                                <label className="text-slate-400 text-[10px] uppercase font-bold">Nome do Produto</label>
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Camisa Flamengo 2025"
+                                    value={newForm.title}
+                                    onChange={(e) => setNewForm(prev => ({ ...prev, title: e.target.value }))}
+                                    className="bg-background-dark border border-slate-700 focus:border-primary text-white text-sm px-3 py-2 rounded outline-none"
+                                />
+                            </div>
+
+                            {/* Preço */}
+                            <div className="flex flex-col gap-1">
+                                <label className="text-slate-400 text-[10px] uppercase font-bold">Preço (R$)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value={newForm.price}
+                                    onChange={(e) => setNewForm(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                                    className="bg-background-dark border border-slate-700 focus:border-primary text-white text-sm px-3 py-2 rounded outline-none"
+                                />
+                            </div>
+
+                            {/* Categoria */}
+                            <div className="flex flex-col gap-1">
+                                <label className="text-slate-400 text-[10px] uppercase font-bold">Categoria</label>
+                                <select
+                                    value={newForm.category}
+                                    onChange={(e) => setNewForm(prev => ({ ...prev, category: e.target.value }))}
+                                    className="bg-background-dark border border-slate-700 focus:border-primary text-white text-sm px-3 py-2 rounded outline-none"
+                                >
+                                    {STORE_CATEGORIES.map(c => (
+                                        <option key={c} value={c}>{c}</option>
+                                    ))}
+                                    <option value="Outra">Outra (digitar abaixo)</option>
+                                </select>
+                                {newForm.category === 'Outra' && (
+                                    <input
+                                        type="text"
+                                        placeholder="Nome da categoria"
+                                        value={newForm.customCategory}
+                                        onChange={(e) => setNewForm(prev => ({ ...prev, customCategory: e.target.value }))}
+                                        className="mt-1 bg-background-dark border border-primary text-white text-sm px-3 py-2 rounded outline-none"
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Image upload */}
+                        <div className="flex flex-col gap-2 mb-5">
+                            <label className="text-slate-400 text-[10px] uppercase font-bold">Fotos do Produto</label>
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="border-2 border-dashed border-slate-700 hover:border-primary/60 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition-colors"
+                            >
+                                <span className="text-slate-500 text-2xl mb-1">📷</span>
+                                <span className="text-slate-400 text-xs">Clique para selecionar fotos (JPG, PNG, WEBP · máx. 5 MB cada)</span>
+                            </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                multiple
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+
+                            {/* Image previews */}
+                            {newForm.previews.length > 0 && (
+                                <div className="flex flex-wrap gap-3 mt-2">
+                                    {newForm.previews.map((src, i) => (
+                                        <div key={i} className="relative group w-20 h-20">
+                                            <img
+                                                src={src}
+                                                alt={`preview-${i}`}
+                                                className="w-full h-full object-cover rounded border border-slate-700"
+                                            />
+                                            <button
+                                                onClick={() => handleRemoveImage(i)}
+                                                className="absolute -top-1.5 -right-1.5 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                ✕
+                                            </button>
+                                            {i === 0 && (
+                                                <span className="absolute bottom-0 left-0 right-0 bg-primary/80 text-black text-[9px] font-bold text-center rounded-b">CAPA</span>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="w-20 h-20 border-2 border-dashed border-slate-700 hover:border-primary/60 rounded flex items-center justify-center cursor-pointer text-slate-500 text-2xl transition-colors"
+                                    >
+                                        +
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleCreateProduct}
+                                disabled={creating}
+                                className="bg-primary hover:bg-primary-hover text-black font-bold text-sm px-5 py-2 rounded-lg transition-colors disabled:opacity-60"
+                            >
+                                {creating ? 'Salvando...' : 'Cadastrar Produto'}
+                            </button>
+                            <button
+                                onClick={handleCancelNew}
+                                disabled={creating}
+                                className="text-slate-400 hover:text-white text-sm border border-slate-700 px-4 py-2 rounded-lg transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Product list */}
                 <div className="space-y-3">
                     {filteredProducts.map((product, index) => {
                         const stock = product.stock_quantity ?? 0;
                         const isEditing = editingId === product.id;
+                        const isCustom = product.id.startsWith('custom-');
 
                         return (
                             <div key={product.id} className={`bg-[#1a1a1a] border-l-2 ${index % 2 === 0 ? 'border-primary' : 'border-slate-800'} rounded-r-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4`}>
                                 <div className="flex items-center gap-3 w-full md:w-auto">
                                     <div className="w-10 h-10 bg-background-dark rounded border border-primary/20 flex items-center justify-center overflow-hidden shrink-0">
-                                        <img alt={product.name} className="w-full h-full object-cover" src={product.image} />
+                                        <img alt={product.name} className="w-full h-full object-cover" src={product.image} referrerPolicy="no-referrer" />
                                     </div>
                                     <div className="flex-1">
                                         {isEditing ? (
@@ -374,7 +628,10 @@ export default function Admin() {
                                                 className="w-full bg-background-dark border border-slate-700 text-white text-[10px] px-2 py-1 rounded mt-1"
                                             />
                                         ) : (
-                                            <p className="text-slate-500 text-[10px]">{product.category}</p>
+                                            <p className="text-slate-500 text-[10px]">
+                                                {product.category}
+                                                {isCustom && <span className="ml-1 text-primary/70">(admin)</span>}
+                                            </p>
                                         )}
                                     </div>
                                 </div>

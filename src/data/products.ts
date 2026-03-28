@@ -18,11 +18,19 @@ export interface Product {
 const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 const IMAGE_PATH_PREFIX = import.meta.env.VITE_IMAGE_PATH_PREFIX ?? 'products';
 
+// When true, catalog.json is ignored — all products come from Supabase only.
+// Set VITE_SUPABASE_ONLY=true after running the migration script.
+const SUPABASE_ONLY = import.meta.env.VITE_SUPABASE_ONLY === 'true';
+
 if (typeof window !== 'undefined') {
-    const logValue = IMAGE_BASE_URL === '/external-images'
-        ? 'Using Nginx Reverse Proxy (/external-images)'
-        : (IMAGE_BASE_URL || 'Using local public folder');
-    console.log('🖼️ Image Source Mode:', logValue);
+    if (SUPABASE_ONLY) {
+        console.log('🗄️ Product Source Mode: Supabase Only (catalog.json ignored)');
+    } else {
+        const logValue = IMAGE_BASE_URL === '/external-images'
+            ? 'Using Nginx Reverse Proxy (/external-images)'
+            : (IMAGE_BASE_URL || 'Using local public folder');
+        console.log('🖼️ Image Source Mode:', logValue);
+    }
 
     if (IMAGE_BASE_URL && IMAGE_BASE_URL.startsWith('http://') && window.location.protocol === 'https:') {
         console.error('⚠️ ALERTA: Você está tentando carregar imagens via HTTP em um site HTTPS. Isso será bloqueado. Mude o VITE_IMAGE_BASE_URL para "/external-images" no Easypanel Build Args.');
@@ -423,16 +431,40 @@ export const baseProducts: Product[] = (catalogData as any[])
 
 export const products: Product[] = baseProducts;
 
+/** Maps a raw Supabase products_new row to the Product interface. */
+const mapSupabaseRow = (o: any): Product => ({
+    id: o.id,
+    name: o.title || 'Produto sem nome',
+    price: o.base_price ?? 0,
+    category: o.category || 'Geral',
+    image: o.images?.[0] || '/placeholder.jpg',
+    images: o.images || [],
+    description: o.description || o.title || '',
+    stock_status: o.stock_status ?? 'in_stock',
+    stock_quantity: o.stock_quantity ?? 0,
+    is_visible: o.is_visible ?? true,
+});
+
 export const getProducts = async (includeHidden = false): Promise<Product[]> => {
     try {
-        const { data: overrides, error } = await supabase
+        const { data: rows, error } = await supabase
             .from('products_new')
             .select('*');
 
         if (error) throw error;
 
+        // ── Supabase Only mode (after migration) ──────────────────────────
+        // All products come from Supabase — catalog.json is not used.
+        if (SUPABASE_ONLY) {
+            const all = (rows || []).map(mapSupabaseRow);
+            return includeHidden ? all : all.filter(p => p.is_visible !== false);
+        }
+
+        // ── Hybrid mode (default) ─────────────────────────────────────────
+        // Merge JSON base products with Supabase overrides, then append
+        // any products that exist only in Supabase (admin-created).
         const merged = baseProducts.map((baseProduct) => {
-            const override = overrides?.find((o: any) => o.id === baseProduct.id);
+            const override = rows?.find((o: any) => o.id === baseProduct.id);
             if (override) {
                 return {
                     ...baseProduct,
@@ -448,10 +480,17 @@ export const getProducts = async (includeHidden = false): Promise<Product[]> => 
             return baseProduct;
         });
 
-        return includeHidden ? merged : merged.filter(p => p.is_visible !== false);
+        // Products created entirely by the admin (no JSON counterpart)
+        const baseIds = new Set(baseProducts.map(p => p.id));
+        const customProducts: Product[] = (rows || [])
+            .filter((o: any) => !baseIds.has(o.id))
+            .map(mapSupabaseRow);
+
+        const all = [...merged, ...customProducts];
+        return includeHidden ? all : all.filter(p => p.is_visible !== false);
     } catch (err) {
-        console.error("Error fetching product overrides from Supabase", err);
-        return baseProducts.filter(p => p.is_visible !== false);
+        console.error("Error fetching products from Supabase", err);
+        return SUPABASE_ONLY ? [] : baseProducts.filter(p => p.is_visible !== false);
     }
 };
 
