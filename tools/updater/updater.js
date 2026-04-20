@@ -158,27 +158,37 @@ async function downloadImage(url, destPath) {
                 maxYupooId++;
                 const newId = `yupoo-${maxYupooId}`;
                 
-                // Keep local records
                 const newProduct = {
                     id: newId,
                     title: data.title,
                     description: data.title,
                     category: data.category,
-                    price: 150, // default, updated in frontend
+                    price: 150,
                     stock_status: "in_stock",
                     stock_quantity: 100,
-                    images: data.images, // We still store original Yupoo URLs
+                    images: data.images,
                     image: data.images[0],
                     original_url: data.original_url
                 };
 
-                // Add to catalog
-                catalog.unshift(newProduct); // Add at the top
+                catalog.unshift(newProduct);
                 
-                // Upload images via SFTP
                 const remoteProductDir = `${REMOTE_IMG_DIR}/${newId}`;
                 try {
-                     await sftp.mkdir(remoteProductDir, true);
+                     // Check connection status before operation, if disconnected reconnect
+                     try {
+                         await sftp.exists(REMOTE_HTML_DIR);
+                     } catch (err) {
+                         if (err.message.includes('No SFTP connection')) {
+                             console.log("SFTP connection dropped. Reconnecting...");
+                             await sftp.connect({ host: VPS_HOST, port: 22, username: VPS_USER, password: VPS_PASS });
+                         } else throw err;
+                     }
+
+                     const dirExists = await sftp.exists(remoteProductDir);
+                     if (!dirExists) {
+                         await sftp.mkdir(remoteProductDir, true);
+                     }
                      
                      for (let i = 0; i < data.images.length; i++) {
                          const imgUrl = data.images[i];
@@ -190,14 +200,27 @@ async function downloadImage(url, destPath) {
                          
                          const remotePath = `${remoteProductDir}/${i+1}${ext}`;
                          console.log(`   Uploading to ${remotePath}...`);
-                         await sftp.fastPut(localTempPath, remotePath);
                          
-                         // cleanup
+                         // reconnect check again
+                         try { await sftp.exists(REMOTE_HTML_DIR); } 
+                         catch (e) { await sftp.connect({ host: VPS_HOST, port: 22, username: VPS_USER, password: VPS_PASS }); }
+
+                         await sftp.fastPut(localTempPath, remotePath);
                          fs.unlinkSync(localTempPath);
                      }
+                     
                      newItemsAdded++;
+                     
+                     // Interim save to prevent total loss
+                     if (newItemsAdded % 5 === 0) {
+                          console.log(`[Checkpoint] Saving partial catalog with ${newItemsAdded} new items...`);
+                          const tempCat = path.join(__dirname, 'catalog.json');
+                          fs.writeFileSync(tempCat, JSON.stringify(catalog, null, 2));
+                          await sftp.fastPut(tempCat, `${REMOTE_HTML_DIR}/catalog.json`);
+                     }
+                     
                 } catch (e) {
-                     console.error(`   Failed to upload images for ${newId}:`, e.message);
+                     console.error(`   Failed to process ${newId}:`, e.message);
                 }
             }
         }
@@ -206,6 +229,7 @@ async function downloadImage(url, destPath) {
             console.log(`Uploading updated catalog.json (${newItemsAdded} new items)...`);
             const tempCat = path.join(__dirname, 'catalog.json');
             fs.writeFileSync(tempCat, JSON.stringify(catalog, null, 2));
+            try { await sftp.exists(REMOTE_HTML_DIR); } catch(e) { await sftp.connect({ host: VPS_HOST, port: 22, username: VPS_USER, password: VPS_PASS }); }
             await sftp.fastPut(tempCat, `${REMOTE_HTML_DIR}/catalog.json`);
             fs.unlinkSync(tempCat);
             console.log("SUCESSO: Catálogo atualizado na VPS!");

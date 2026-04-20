@@ -67,3 +67,26 @@ body {
   background: #d4af35;
   border-radius: 10px;
 }
+
+/* Brazil Theme Effects */
+.brazil-glow {
+  box-shadow: 0 0 25px -5px rgba(0, 155, 58, 0.4), 0 0 15px -3px rgba(254, 223, 0, 0.3) !important;
+  border-color: rgba(254, 223, 0, 0.5) !important;
+}
+
+.brazil-bg {
+  background: linear-gradient(135deg, rgba(0, 155, 58, 0.1), rgba(254, 223, 0, 0.05)) !important;
+}
+
+@keyframes floatParticles {
+  0% { transform: translateY(0) scale(1); opacity: 0.2; }
+  50% { transform: translateY(-20px) scale(1.1); opacity: 0.5; }
+  100% { transform: translateY(0) scale(1); opacity: 0.2; }
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatParticles 4s infinite ease-in-out;
+}

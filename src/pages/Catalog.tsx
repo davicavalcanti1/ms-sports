@@ -4,9 +4,10 @@ import { getProducts } from '../data/products';
 import type { Product } from '../data/products';
 import { Star, Filter, Loader2, Search, ChevronDown, ChevronRight } from 'lucide-react';
 
-type FilterGroup = "Todos" | "Camisas" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
+type FilterGroup = "Todos" | "Seleções" | "Camisas" | "Basquete" | "F1" | "Kits" | "Shorts" | "Feminino" | "Infantil" | "Acessórios" | "Polo";
 
 const filterGroups: Record<Exclude<FilterGroup, "Todos">, string[]> = {
+    "Seleções": ["Brasil", "Américas", "Europa e Outros"],
     "Camisas": ["Versão Jogador", "Versão Torcedor", "Retrô"],
     "Basquete": ["Camisa Basquete", "Short NBA"],
     "F1": ["Camisa de Formula 1"],
@@ -97,6 +98,14 @@ export default function Catalog() {
                     if (!titleLower.includes('jogador') && !titleLower.includes('player')) return false;
                 } else if (selectedGroup === 'Camisas' && selectedTeam === 'Retrô') {
                     if (!titleLower.includes('retrô') && !titleLower.includes('retro')) return false;
+                } else if (selectedGroup === 'Seleções') {
+                    if (selectedTeam === 'Brasil') {
+                        if (!titleLower.includes('brasil') && !titleLower.includes('brazil')) return false;
+                    } else if (selectedTeam === 'Américas') {
+                        if (!titleLower.includes('argentina') && !titleLower.includes('colombia') && !titleLower.includes('uruguai') && !titleLower.includes('uruguay') && !titleLower.includes('mexico')) return false;
+                    } else if (selectedTeam === 'Europa e Outros') {
+                        if (!titleLower.includes('frança') && !titleLower.includes('france') && !titleLower.includes('inglaterra') && !titleLower.includes('england') && !titleLower.includes('espanha') && !titleLower.includes('spain') && !titleLower.includes('alemanha') && !titleLower.includes('germany') && !titleLower.includes('holanda') && !titleLower.includes('netherlands') && !titleLower.includes('portugal') && !titleLower.includes('italia') && !titleLower.includes('italy')) return false;
+                    }
                 } else {
                     if (!titleLower.includes(selectedTeam.toLowerCase())) {
                         return false;
@@ -104,7 +113,11 @@ export default function Catalog() {
                 }
             } else {
                 // Group level filtering
-                if (selectedGroup === 'Feminino') {
+                if (selectedGroup === 'Seleções') {
+                    // Match any country listed above roughly
+                    const countries = ['brasil', 'brazil', 'argentina', 'colombia', 'uruguai', 'uruguay', 'mexico', 'frança', 'france', 'inglaterra', 'england', 'espanha', 'spain', 'alemanha', 'germany', 'holanda', 'netherlands', 'portugal', 'italia', 'italy', 'japao', 'japan', 'belgica', 'belgium'];
+                    if (!countries.some(c => titleLower.includes(c))) return false;
+                } else if (selectedGroup === 'Feminino') {
                     if (!titleLower.includes('feminino') && !titleLower.includes('woman') && !titleLower.includes('women')) return false;
                 } else if (selectedGroup === 'Infantil') {
                     if (!titleLower.includes('kid') && !titleLower.includes('infantil') && catLower !== 'infantil') return false;
