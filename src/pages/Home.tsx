@@ -48,17 +48,23 @@ export default function Home() {
         <div className="space-y-0 relative">
             {/* Particles for World Cup vibe */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-               {[...Array(40)].map((_, i) => (
-                  <div key={i} className="confetti" style={{
-                      backgroundColor: i % 2 === 0 ? 'rgba(0, 155, 58, 0.8)' : 'rgba(254, 223, 0, 0.8)',
-                      width: Math.random() * 8 + 4 + 'px',
-                      height: Math.random() * 12 + 6 + 'px',
-                      left: Math.random() * 100 + 'vw',
-                      top: '-10vh',
-                      animationDuration: Math.random() * 5 + 3 + 's',
-                      animationDelay: Math.random() * 5 + 's'
-                  }}></div>
-               ))}
+               {[...Array(120)].map((_, i) => {
+                  const isFlag = i % 15 === 0; // Every 15th particle is a flag
+                  return (
+                      <div key={i} className="confetti flex items-center justify-center" style={{
+                          backgroundColor: isFlag ? 'transparent' : (i % 2 === 0 ? 'rgba(0, 155, 58, 0.8)' : 'rgba(254, 223, 0, 0.8)'),
+                          width: isFlag ? 'auto' : Math.random() * 8 + 4 + 'px',
+                          height: isFlag ? 'auto' : Math.random() * 12 + 6 + 'px',
+                          fontSize: isFlag ? (Math.random() * 10 + 15) + 'px' : '0',
+                          left: Math.random() * 100 + 'vw',
+                          top: '-10vh',
+                          animationDuration: Math.random() * 6 + 3 + 's',
+                          animationDelay: Math.random() * 6 + 's'
+                      }}>
+                          {isFlag && '🇧🇷'}
+                      </div>
+                  );
+               })}
             </div>
 
             {/* Fixed Stadium Background */}
