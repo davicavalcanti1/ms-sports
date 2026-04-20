@@ -1,5 +1,6 @@
 
 import { supabase } from '../lib/supabase';
+import { formatProductName } from '../utils/nameFormatter';
 
 export interface Product {
     id: string;
@@ -94,14 +95,16 @@ export const fetchBaseProducts = async (): Promise<Product[]> => {
                         });
                     }
 
+                    const cleanTitle = formatProductName(item.title);
+
                     return {
                         id: item.id,
-                        name: item.title,
-                        price: getPrice(item.title, item.category || ''),
+                        name: cleanTitle,
+                        price: getPrice(item.title, item.category || ''), // Keep original title for price checking to be safe
                         category: item.category,
                         image: images.length > 0 ? images[0] : '/placeholder.jpg',
                         images: images,
-                        description: item.description || item.title,
+                        description: item.description ? formatProductName(item.description) : cleanTitle,
                         stock_status: item.stock_status,
                         stock_quantity: 0,
                         original_url: item.original_url,
