@@ -84,8 +84,23 @@ export default function Catalog() {
         if (selectedGroup !== 'Todos') {
             if (selectedTeam) {
                 // If a specific sub-category is chosen
-                if (!titleLower.includes(selectedTeam.toLowerCase())) {
-                    return false;
+                if (selectedGroup === 'Camisas' && selectedTeam === 'Versão Torcedor') {
+                    // Torcedor implicitly means it's not player version and not retro
+                    if (titleLower.includes('jogador') || titleLower.includes('player') || titleLower.includes('retrô') || titleLower.includes('retro')) {
+                        return false;
+                    }
+                    // Basic sanity check that it's a field shirt
+                    if (titleLower.includes('f1') || titleLower.includes('goleiro')) {
+                        // if you need to filter these out of "torcedor" you can, but primarily it's vs "jogador"
+                    }
+                } else if (selectedGroup === 'Camisas' && selectedTeam === 'Versão Jogador') {
+                    if (!titleLower.includes('jogador') && !titleLower.includes('player')) return false;
+                } else if (selectedGroup === 'Camisas' && selectedTeam === 'Retrô') {
+                    if (!titleLower.includes('retrô') && !titleLower.includes('retro')) return false;
+                } else {
+                    if (!titleLower.includes(selectedTeam.toLowerCase())) {
+                        return false;
+                    }
                 }
             } else {
                 // Group level filtering
@@ -106,9 +121,11 @@ export default function Catalog() {
                 } else if (selectedGroup === 'Polo') {
                     if (!titleLower.includes('polo')) return false;
                 } else if (selectedGroup === 'Camisas') {
-                    if (!titleLower.includes('jogador') && !titleLower.includes('player') &&
-                        !titleLower.includes('torcedor') && !titleLower.includes('fan') &&
-                        !titleLower.includes('retrô') && !titleLower.includes('retro')) return false;
+                    // When just "Camisas" is clicked, exclude polo, f1, nba, kits, shorts, etc if we want a strict soccer shirt filter
+                    // Or just keep the existing simple logic:
+                    if (titleLower.includes('f1') || titleLower.includes('formula 1') || titleLower.includes('polo') || titleLower.includes('kit') || titleLower.includes('short') || titleLower.includes('meia') || catLower === 'nba') {
+                        return false;
+                    }
                 }
             }
         }

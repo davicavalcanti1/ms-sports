@@ -1,8 +1,48 @@
 import { ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { formatImageUrl } from '../data/products';
+import { useState, useEffect } from 'react';
+import { getProducts } from '../data/products';
+import type { Product } from '../data/products';
 
 export default function Home() {
+    const [featuredProducts, setFeaturedProducts] = useState<{ type: string, product: Product | null }[]>([]);
+
+    useEffect(() => {
+        loadFeatured();
+    }, []);
+
+    const loadFeatured = async () => {
+        const allProducts = await getProducts();
+
+        // Types required: 1 Torcedor, 1 Jogador, 1 Fórmula 1, 1 Basquete, 1 Feminina, 1 Kids, 1 Shorts, e 1 Kits
+        const types = [
+            { label: 'Torcedor', predicate: (p: Product) => { const t = p.name.toLowerCase(); return !t.includes('jogador') && !t.includes('player') && !t.includes('f1') && !t.includes('polo') && !t.includes('kit') && !t.includes('short') && !t.includes('kid') && !t.includes('infantil') && !t.includes('feminina'); } },
+            { label: 'Jogador', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('jogador') || t.includes('player'); } },
+            { label: 'Fórmula 1', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1'); } },
+            { label: 'Basquete', predicate: (p: Product) => { const t = p.name.toLowerCase(); const c = p.category.toLowerCase(); return t.includes('basquete') || t.includes('basketball') || c === 'nba'; } },
+            { label: 'Feminina', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('feminina') || t.includes('woman') || t.includes('women'); } },
+            { label: 'Kids', predicate: (p: Product) => { const t = p.name.toLowerCase(); const c = p.category.toLowerCase(); return t.includes('kid') || t.includes('infantil') || c === 'infantil'; } },
+            { label: 'Shorts', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('short'); } },
+            { label: 'Kits', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('kit'); } },
+        ];
+
+        const featured = types.map(type => {
+            const product = allProducts.find(type.predicate) || null;
+            return { type: type.label, product };
+        });
+
+        setFeaturedProducts(featured.filter(f => f.product !== null));
+    };
+
+    const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        const number1 = "5583981109166"; // Rafael
+        const number2 = "5583998168765"; // João Victor
+        const selectedNumber = Math.random() > 0.5 ? number1 : number2;
+        const message = encodeURIComponent("Olá! Vim pelo site da MS Sports e gostaria de tirar uma dúvida.");
+        window.open(`https://wa.me/${selectedNumber}?text=${message}`, '_blank');
+    };
+
     return (
         <div className="space-y-0 relative">
             {/* Fixed Stadium Background */}
@@ -31,14 +71,15 @@ export default function Home() {
                         Camisas Oficiais de Futebol & Basquete para o Atleta de Elite.
                     </p>
                     <div className="pt-4">
-                        <Link
-                            to="/catalog"
+                        <a
+                            href="#"
+                            onClick={handleWhatsAppClick}
                             className="inline-flex w-full bg-primary text-black font-black px-8 py-4 rounded-lg items-center justify-center gap-2 hover:brightness-110 transition-all uppercase tracking-wider text-sm"
                             style={{ boxShadow: '0 0 20px rgba(212,175,55,0.3)' }}
                         >
                             FALAR COM VENDEDOR
                             <ArrowRight className="w-5 h-5" />
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -60,75 +101,37 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h3 className="text-xl font-bold tracking-tight uppercase">DESTAQUES</h3>
-                        <p className="text-[10px] text-primary font-bold tracking-widest mt-1 uppercase">Temporada 24/25</p>
+                        <p className="text-[10px] text-primary font-bold tracking-widest mt-1 uppercase">Coleção Completa</p>
                     </div>
                     <Link to="/catalog" className="text-primary text-xs font-bold tracking-widest uppercase hover:underline">Ver Todas</Link>
                 </div>
                 <div className="flex gap-6 overflow-x-auto no-scrollbar pb-4">
-                    {/* Flamengo */}
-                    <Link to="/product/yupoo-1" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Flamengo Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-1', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
-                                <Star className="w-3 h-3 text-primary fill-primary" />
-                            </button>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded">OFICIAL</span>
-                                <span className="bg-white/20 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded">NEW</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Flamengo Home 24/25</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* São Paulo - Using generic ID yupoo-2 for now as placeholder or next available */}
-                    <Link to="/product/yupoo-2" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Palmeiras Special" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-2', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded">OFICIAL</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Palmeiras Special Edition</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* Fluminense */}
-                    <Link to="/product/yupoo-13" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Fluminense Home 24/25" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-13', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Soccer</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Fluminense Home 24/25</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
-
-                    {/* Wizards - Example, using generic ID yupoo-4 */}
-                    <Link to="/product/yupoo-4" className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
-                        <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
-                            <img alt="Cruzeiro POLO" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={formatImageUrl('yupoo-4', 1)} referrerPolicy="no-referrer" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div className="absolute bottom-3 left-3 flex gap-2">
-                                <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded">NBA</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Basketball</p>
-                            <h4 className="text-base font-bold text-white truncate mt-1">Cruzeiro POLO</h4>
-                            <p className="text-lg font-bold text-white mt-1">R$ 150,00</p>
-                        </div>
-                    </Link>
+                    {featuredProducts.length === 0 ? (
+                        <div className="text-white">Carregando destaques...</div>
+                    ) : (
+                        featuredProducts.map(({ type, product }) => {
+                            if (!product) return null;
+                            return (
+                                <Link key={product.id} to={`/product/${product.id}`} className="min-w-[280px] bg-white/[0.03] backdrop-blur-xl border border-primary/20 rounded-2xl p-4 flex flex-col gap-4 group">
+                                    <div className="relative aspect-[3/4] rounded-xl bg-[#1a1d23] flex items-center justify-center overflow-hidden">
+                                        <img alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={product.image} referrerPolicy="no-referrer" loading="lazy" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                        <button className="absolute top-3 right-3 bg-white/[0.03] backdrop-blur-xl border border-primary/20 p-2 rounded-full">
+                                            <Star className="w-3 h-3 text-primary fill-primary" />
+                                        </button>
+                                        <div className="absolute bottom-3 left-3 flex gap-2">
+                                            <span className="bg-primary text-black text-[9px] font-black px-2 py-0.5 rounded uppercase">{type}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{product.category}</p>
+                                        <h4 className="text-base font-bold text-white truncate mt-1">{product.name}</h4>
+                                        <p className="text-lg font-bold text-white mt-1">R$ {product.price.toFixed(2)}</p>
+                                    </div>
+                                </Link>
+                            );
+                        })
+                    )}
                 </div>
             </section>
 
