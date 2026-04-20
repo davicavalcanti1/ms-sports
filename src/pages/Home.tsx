@@ -48,16 +48,15 @@ export default function Home() {
         <div className="space-y-0 relative">
             {/* Particles for World Cup vibe */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-               {[...Array(15)].map((_, i) => (
-                  <div key={i} className="particle" style={{
-                      // Mix of green and yellow particles
-                      backgroundColor: i % 2 === 0 ? 'rgba(0, 155, 58, 0.4)' : 'rgba(254, 223, 0, 0.4)',
+               {[...Array(40)].map((_, i) => (
+                  <div key={i} className="confetti" style={{
+                      backgroundColor: i % 2 === 0 ? 'rgba(0, 155, 58, 0.8)' : 'rgba(254, 223, 0, 0.8)',
                       width: Math.random() * 8 + 4 + 'px',
-                      height: Math.random() * 8 + 4 + 'px',
+                      height: Math.random() * 12 + 6 + 'px',
                       left: Math.random() * 100 + 'vw',
-                      top: Math.random() * 100 + 'vh',
-                      animationDuration: Math.random() * 3 + 2 + 's',
-                      animationDelay: Math.random() * 2 + 's'
+                      top: '-10vh',
+                      animationDuration: Math.random() * 5 + 3 + 's',
+                      animationDelay: Math.random() * 5 + 's'
                   }}></div>
                ))}
             </div>
@@ -81,7 +80,7 @@ export default function Home() {
                         Rumo ao Hexa 🇧🇷
                     </div>
                     <h2 className="text-5xl md:text-6xl font-black leading-[0.9] tracking-tight uppercase" style={{ textShadow: '0 4px 20px rgba(0, 155, 58, 0.4)' }}>
-                        VISTE A <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009b3a] to-[#fedf00] italic">SELEÇÃO</span>
+                        VISTA O MANTO <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#009b3a] to-[#fedf00] italic">DA SELEÇÃO</span>
                     </h2>
                     <p className="text-gray-200 text-sm leading-relaxed max-w-[280px]">
                         A nova coleção da Seleção Brasileira e o melhor do esporte para vestir sua paixão.
