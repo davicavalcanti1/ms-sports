@@ -14,25 +14,22 @@ export default function Home() {
     const loadFeatured = async () => {
         const allProducts = await getProducts();
 
-        // Types required: 1 Brasil, 1 Torcedor, 1 Jogador, 1 Fórmula 1, 1 Basquete, 1 Feminina, 1 Kids, 1 Shorts, e 1 Kits
-        const types = [
-            { label: '🇧🇷 Seleção Brasileira', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('brasil') || t.includes('brazil'); } },
-            { label: 'Torcedor', predicate: (p: Product) => { const t = p.name.toLowerCase(); return !t.includes('jogador') && !t.includes('player') && !t.includes('f1') && !t.includes('polo') && !t.includes('kit') && !t.includes('short') && !t.includes('kid') && !t.includes('infantil') && !t.includes('feminina') && !t.includes('brasil') && !t.includes('brazil'); } },
-            { label: 'Jogador', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('jogador') || t.includes('player'); } },
-            { label: 'Fórmula 1', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('f1') || t.includes('formula 1') || t.includes('fórmula 1'); } },
-            { label: 'Basquete', predicate: (p: Product) => { const t = p.name.toLowerCase(); const c = p.category.toLowerCase(); return t.includes('basquete') || t.includes('basketball') || c === 'nba'; } },
-            { label: 'Feminina', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('feminina') || t.includes('woman') || t.includes('women'); } },
-            { label: 'Kids', predicate: (p: Product) => { const t = p.name.toLowerCase(); const c = p.category.toLowerCase(); return t.includes('kid') || t.includes('infantil') || c === 'infantil'; } },
-            { label: 'Shorts', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('short'); } },
-            { label: 'Kits', predicate: (p: Product) => { const t = p.name.toLowerCase(); return t.includes('kit'); } },
-        ];
-
-        const featured = types.map(type => {
-            const product = allProducts.find(type.predicate) || null;
-            return { type: type.label, product };
+        // Show exclusively Brazil items for the World Cup vibe
+        const brazilProducts = allProducts.filter(p => {
+            const t = p.name.toLowerCase();
+            return t.includes('brasil') || t.includes('brazil');
         });
 
-        setFeaturedProducts(featured.filter(f => f.product !== null));
+        const featured = brazilProducts.slice(0, 8).map(product => {
+            return { type: '🇧🇷 Seleção Brasileira', product };
+        });
+
+        // Ensure we load at least something if Brazil is missing
+        if (featured.length === 0) {
+            setFeaturedProducts(allProducts.slice(0, 8).map(product => ({ type: 'Destaque', product })));
+        } else {
+            setFeaturedProducts(featured);
+        }
     };
 
     const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
