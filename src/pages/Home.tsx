@@ -164,9 +164,9 @@ export default function Home() {
                     <img
                         alt="Times Brasileiros"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/flamengo.jpg"
+                        src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🇧🇷 BRASIL</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />BRASILEIROS</h4>
@@ -179,9 +179,9 @@ export default function Home() {
                     <img
                         alt="Times Estrangeiros"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/saopaulo.jpg"
+                        src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🌍 EUROPA & MAIS</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />ESTRANGEIROS</h4>
@@ -194,9 +194,9 @@ export default function Home() {
                     <img
                         alt="Basketball"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
-                        src="/wizards.jpg"
+                        src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🏀 NBA</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">BASKETBALL</h4>
