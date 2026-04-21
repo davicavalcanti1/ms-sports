@@ -1,10 +1,17 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { Product } from '../data/products';
 
 export interface CartItem extends Product {
     cartId: string;
     size: string;
     quantity: number;
+}
+
+export interface CartToast {
+    id: number;
+    productName: string;
+    size: string;
+    image: string;
 }
 
 interface CartContextType {
@@ -14,6 +21,8 @@ interface CartContextType {
     clearCart: () => void;
     cartTotal: number;
     cartCount: number;
+    toasts: CartToast[];
+    dismissToast: (id: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -31,10 +40,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return [];
     });
 
-    // Save to localStorage whenever cart changes
+    const [toasts, setToasts] = useState<CartToast[]>([]);
+
     useEffect(() => {
         localStorage.setItem('@mssports/cart', JSON.stringify(cart));
     }, [cart]);
+
+    const dismissToast = useCallback((id: number) => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, []);
 
     const addToCart = (product: Product, size: string) => {
         setCart((prev) => {
@@ -48,6 +62,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             return [...prev, { ...product, cartId: `${product.id}-${size}-${Date.now()}`, size, quantity: 1 }];
         });
+
+        const toastId = Date.now();
+        setToasts((prev) => [...prev, { id: toastId, productName: product.name, size, image: product.image }]);
+        setTimeout(() => dismissToast(toastId), 3500);
     };
 
     const removeFromCart = (cartId: string) => {
@@ -62,7 +80,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, cartTotal, cartCount }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, cartTotal, cartCount, toasts, dismissToast }}>
             {children}
         </CartContext.Provider>
     );
