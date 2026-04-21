@@ -6,6 +6,11 @@ import type { Product } from '../data/products';
 
 export default function Home() {
     const [featuredProducts, setFeaturedProducts] = useState<{ type: string, product: Product | null }[]>([]);
+    const [categoryImages, setCategoryImages] = useState({
+        brazil: '',
+        europe: '',
+        nba: ''
+    });
 
     useEffect(() => {
         loadFeatured();
@@ -30,6 +35,20 @@ export default function Home() {
         } else {
             setFeaturedProducts(featured);
         }
+
+        // Fetch one real product image for each category banner
+        const flamengo = allProducts.find(p => p.name.toLowerCase().includes('flamengo'));
+        const europe = allProducts.find(p => {
+            const t = p.name.toLowerCase();
+            return t.includes('real madrid') || t.includes('barcelona') || t.includes('psg') || t.includes('arsenal');
+        });
+        const nba = allProducts.find(p => p.category.toLowerCase() === 'nba' || p.name.toLowerCase().includes('lakers'));
+        
+        setCategoryImages({
+            brazil: flamengo?.image || '',
+            europe: europe?.image || '',
+            nba: nba?.image || ''
+        });
     };
 
     const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -159,46 +178,61 @@ export default function Home() {
                 {/* Times Brasileiros */}
                 <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group">
                     <img
-                        alt="Times Brasileiros"
+                        alt="Times Brasileiros Background"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
                         src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🇧🇷 BRASIL</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />BRASILEIROS</h4>
                         <p className="text-xs text-gray-300 max-w-[200px]">Flamengo, São Paulo, Fluminense e mais.</p>
                     </div>
+                    {categoryImages.brazil && (
+                        <div className="absolute top-0 right-0 w-1/2 h-full flex items-center justify-end pr-4 md:pr-12 pointer-events-none opacity-90 pb-4 md:pb-0 mix-blend-screen overflow-hidden">
+                            <img src={categoryImages.brazil} alt="Camisa Exemplo BR" className="h-[120%] rotate-12 scale-125 object-cover mask-image-fade" />
+                        </div>
+                    )}
                 </Link>
 
                 {/* Times Estrangeiros */}
                 <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group">
                     <img
-                        alt="Times Estrangeiros"
+                        alt="Times Estrangeiros Background"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
                         src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🌍 EUROPA & MAIS</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">TIMES<br />ESTRANGEIROS</h4>
                         <p className="text-xs text-gray-300 max-w-[200px]">Real Madrid, Barcelona, PSG e mais.</p>
                     </div>
+                    {categoryImages.europe && (
+                        <div className="absolute top-0 right-0 w-1/2 h-full flex items-center justify-end pr-4 md:pr-12 pointer-events-none opacity-90 pb-4 md:pb-0 mix-blend-screen overflow-hidden">
+                            <img src={categoryImages.europe} alt="Camisa Exemplo Europa" className="h-[120%] -rotate-12 scale-125 object-cover mask-image-fade" />
+                        </div>
+                    )}
                 </Link>
 
                 {/* Basketball */}
                 <Link to="/catalog" className="block relative w-full aspect-[21/9] rounded-2xl overflow-hidden group mb-12">
                     <img
-                        alt="Basketball"
+                        alt="Basketball Background"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
                         src="/stadium.jpg"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent"></div>
                     <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <span className="text-primary font-black text-[10px] tracking-[0.3em] uppercase mb-1">🏀 NBA</span>
                         <h4 className="text-2xl md:text-3xl font-black italic uppercase leading-none mb-1">BASKETBALL</h4>
                         <p className="text-xs text-gray-300 max-w-[200px]">Wizards, Lakers, Bulls e mais.</p>
                     </div>
+                    {categoryImages.nba && (
+                        <div className="absolute top-0 right-0 w-1/2 h-full flex items-center justify-end pr-4 md:pr-12 pointer-events-none opacity-90 pb-4 md:pb-0 mix-blend-screen overflow-hidden">
+                            <img src={categoryImages.nba} alt="Regata Exemplo NBA" className="h-[120%] rotate-6 scale-125 object-cover mask-image-fade" />
+                        </div>
+                    )}
                 </Link>
             </section>
         </div>
